@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="action_settings">Settings</string>
+    <array name="tab_labels">
+        <item>Most Popular</item>
+        <item>Highest Rated</item>
+    </array>
+</resources>
