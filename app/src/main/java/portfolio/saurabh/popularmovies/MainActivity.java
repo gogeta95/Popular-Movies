@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPager pager = (ViewPager) findViewById(R.id.viewpager);
         pager.setAdapter(new PagerAdapter(getSupportFragmentManager(), this));
         tabLayout.setupWithViewPager(pager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     @Override
@@ -45,7 +46,14 @@ class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return ListFragment.getInstance(Titles[position]);
+        switch (position) {
+            case 0:
+                return ListFragment.getInstance(UriBuilder.MOST_POPULAR);
+            case 1:
+                return ListFragment.getInstance(UriBuilder.HIGHEST_RATED);
+            default:
+                return null;
+        }
 
     }
 

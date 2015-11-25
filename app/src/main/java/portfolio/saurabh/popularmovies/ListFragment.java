@@ -1,6 +1,6 @@
 package portfolio.saurabh.popularmovies;
 
-import android.net.Uri;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -28,30 +28,34 @@ import java.util.Scanner;
 
 public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     public static final String KEY_DATA = "DATA";
-    public static final String KEY_TITLE="title";
+    public static final String KEY_TITLE = "title";
     List<MovieData> movieDataList;
     RecyclerView recyclerView;
     RecyclerAdapter adapter;
     ProgressBar progressBar;
     SwipeRefreshLayout refreshLayout;
 
-    public  ListFragment(){
+    public ListFragment() {
 
     }
 
     public static ListFragment getInstance(String title) {
-        ListFragment fragment= new ListFragment();
-        Bundle bundle= new Bundle();
-        bundle.putString(KEY_TITLE,title);
+        ListFragment fragment = new ListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_TITLE, title);
         fragment.setArguments(bundle);
         return fragment;
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.list_layout, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        if(getActivity().getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        else
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.progress_colors));
@@ -66,7 +70,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 recyclerView.setAdapter(adapter);
             }
         } else {
-            new GetMoviesTask().execute(UriBuilder.MOST_POPULAR);
+            new GetMoviesTask().execute(getArguments().getString(KEY_TITLE));
         }
         return layout;
     }
@@ -81,7 +85,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        new GetMoviesTask().execute(UriBuilder.MOST_POPULAR);
+        new GetMoviesTask().execute(getArguments().getString(KEY_TITLE));
     }
 
     class GetMoviesTask extends AsyncTask<String, Void, Integer> {
