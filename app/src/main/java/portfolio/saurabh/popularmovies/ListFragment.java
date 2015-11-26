@@ -122,11 +122,11 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
             if (integer == 1) {
-                Toast.makeText(getContext(), "There was an error fetching data. Please try again later.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),getString(R.string.connection_error), Toast.LENGTH_LONG).show();
             } else {
                 adapter = new RecyclerAdapter(getContext(), movieDataList);
                 if (recyclerView.getAdapter() != null) {
-                    recyclerView.swapAdapter(adapter, true);
+                    recyclerView.swapAdapter(adapter, false);
                 } else {
                     recyclerView.setAdapter(adapter);
                 }

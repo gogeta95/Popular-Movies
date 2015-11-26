@@ -6,11 +6,11 @@
     android:foreground="?selectableItemBackground">
 
     <ImageView
-        android:transitionName="image"
         android:id="@+id/poster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:src="@drawable/placeholder" />
+        android:src="@drawable/placeholder"
+        android:transitionName="poster" />
 </FrameLayout>

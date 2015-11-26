@@ -26,7 +26,7 @@ public class JSONParser {
     }
 
     public static MovieData parsemovie(JSONObject object) throws JSONException, ParseException {
-        String title = object.getString("original_language");
+        String title = object.getString("original_title");
         String posterurl = object.getString("poster_path");
         String plot = object.getString("overview");
         double user_rating = object.getDouble("vote_average");

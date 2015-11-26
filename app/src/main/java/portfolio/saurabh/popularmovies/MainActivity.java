@@ -2,6 +2,7 @@ package portfolio.saurabh.popularmovies;
 
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,12 +11,24 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.ChangeClipBounds;
+import android.transition.Explode;
 import android.view.Menu;
+import android.view.Window;
 
 public class MainActivity extends AppCompatActivity {
+    public void setupWindowAnimations() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+            getWindow().setEnterTransition(new Explode());
+            getWindow().setExitTransition(new Explode());
+            getWindow().setSharedElementExitTransition(new ChangeClipBounds());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setupWindowAnimations();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

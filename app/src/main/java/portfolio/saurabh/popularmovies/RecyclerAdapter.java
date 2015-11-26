@@ -1,6 +1,10 @@
 package portfolio.saurabh.popularmovies;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +36,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(PosterViewHolder holder, int position) {
-        String poster_url = movieDataList.get(position).posterurl;
+    public void onBindViewHolder(final PosterViewHolder holder,int position) {
+        final MovieData movie=movieDataList.get(position);
+        String poster_url = movie.posterurl;
         if (!(poster_url.isEmpty() || poster_url.equals("null"))) {
             Picasso.with(context).load(IMAGE_BASE_URL + poster_url).into(holder.poster);
         }
@@ -41,7 +46,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent= new Intent(context,MovieDetail.class);
+                intent.putExtra(MovieDetail.KEY_MOVIE,movie);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((AppCompatActivity) context, holder.poster, "poster").toBundle());
+                }
+                else
+                    context.startActivity(intent);
             }
         });
     }
