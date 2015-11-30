@@ -28,9 +28,10 @@ public class JSONParser {
     public static MovieData parsemovie(JSONObject object) throws JSONException, ParseException {
         String title = object.getString("original_title");
         String posterurl = object.getString("poster_path");
+        String backdrop=object.getString("backdrop_path");
         String plot = object.getString("overview");
         double user_rating = object.getDouble("vote_average");
         Date release_date = sdf.parse(object.getString("release_date").equals("null")||object.getString("release_date").isEmpty()?"01-01-1970":object.getString("release_date"));
-        return new MovieData(title, posterurl, plot, user_rating, release_date);
+        return new MovieData(title, posterurl, plot, user_rating, release_date,backdrop);
     }
 }

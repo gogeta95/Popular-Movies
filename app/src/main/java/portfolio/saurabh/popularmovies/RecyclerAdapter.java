@@ -19,7 +19,8 @@ import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     public static final String TAG = RecyclerAdapter.class.getName();
-    public static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w185";
+    public static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/w185";
+    public static final  String BACKDROP_BASE_URL="http://image.tmdb.org/t/p/w500";
     LayoutInflater inflater;
     Context context;
     List<MovieData> movieDataList;
@@ -40,7 +41,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
         final MovieData movie=movieDataList.get(position);
         String poster_url = movie.posterurl;
         if (!(poster_url.isEmpty() || poster_url.equals("null"))) {
-            Picasso.with(context).load(IMAGE_BASE_URL + poster_url).error(R.drawable.placeholder).into(holder.poster);
+            Picasso.with(context).load(POSTER_BASE_URL + poster_url).error(R.drawable.placeholder).into(holder.poster);
         }
 
         holder.root.setOnClickListener(new View.OnClickListener() {
