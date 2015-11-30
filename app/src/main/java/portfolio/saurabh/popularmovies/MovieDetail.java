@@ -52,7 +52,7 @@ public class MovieDetail extends AppCompatActivity {
             }
 
             ImageView poster = (ImageView) findViewById(R.id.poster);
-            Picasso.with(this).load(RecyclerAdapter.IMAGE_BASE_URL + movie.posterurl).into(poster);
+            Picasso.with(this).load(RecyclerAdapter.IMAGE_BASE_URL + movie.posterurl).error(R.drawable.placeholder).into(poster);
             ((IconTextView) findViewById(R.id.date)).setText("{fa-calendar} " + dateFormat.format(movie.release_date));
             ((IconTextView) findViewById(R.id.rating)).setText("{fa-star} " + movie.user_rating + "/10");
             ((TextView) findViewById(R.id.plot)).setText(movie.plot.equals("null") ? "" : movie.plot);

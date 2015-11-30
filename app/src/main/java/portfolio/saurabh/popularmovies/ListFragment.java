@@ -1,7 +1,6 @@
 package portfolio.saurabh.popularmovies;
 
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -13,17 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -70,7 +61,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 recyclerView.setAdapter(adapter);
             }
         } else {
-            new GetMoviesTask().execute(getArguments().getString(KEY_TITLE));
+            new GetMoviesTask(this).execute(getArguments().getString(KEY_TITLE));
         }
         return layout;
     }
@@ -85,55 +76,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        new GetMoviesTask().execute(getArguments().getString(KEY_TITLE));
+        new GetMoviesTask(this).execute(getArguments().getString(KEY_TITLE));
     }
 
-    class GetMoviesTask extends AsyncTask<String, Void, Integer> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.INVISIBLE);
-        }
-
-        @Override
-        protected Integer doInBackground(String... params) {
-            try {
-                UriBuilder uri = new UriBuilder(getContext());
-                uri.setSortValue(params[0]);
-                URL url = new URL(uri.toString());
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                StringBuilder sb = new StringBuilder();
-                Scanner sc = new Scanner(connection.getInputStream());
-                while (sc.hasNextLine()) {
-                    sb.append(sc.nextLine());
-                }
-                connection.disconnect();
-                movieDataList = JSONParser.parse(sb.toString());
-                return 0;
-            } catch (IOException | ParseException | JSONException | ArrayIndexOutOfBoundsException e) {
-                e.printStackTrace();
-                return 1;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
-            if (integer == 1) {
-                Toast.makeText(getContext(),getString(R.string.connection_error), Toast.LENGTH_LONG).show();
-            } else {
-                adapter = new RecyclerAdapter(getContext(), movieDataList);
-                if (recyclerView.getAdapter() != null) {
-                    recyclerView.swapAdapter(adapter, false);
-                } else {
-                    recyclerView.setAdapter(adapter);
-                }
-                refreshLayout.setRefreshing(false);
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-            }
-        }
-    }
 }

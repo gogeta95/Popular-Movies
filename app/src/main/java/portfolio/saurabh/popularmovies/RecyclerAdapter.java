@@ -40,7 +40,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
         final MovieData movie=movieDataList.get(position);
         String poster_url = movie.posterurl;
         if (!(poster_url.isEmpty() || poster_url.equals("null"))) {
-            Picasso.with(context).load(IMAGE_BASE_URL + poster_url).into(holder.poster);
+            Picasso.with(context).load(IMAGE_BASE_URL + poster_url).error(R.drawable.placeholder).into(holder.poster);
         }
 
         holder.root.setOnClickListener(new View.OnClickListener() {
