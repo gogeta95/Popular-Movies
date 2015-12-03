@@ -1,8 +1,8 @@
 package portfolio.saurabh.popularmovies;
 
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.view.View;
-import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -53,7 +53,12 @@ class GetMoviesTask extends AsyncTask<String, Void, Integer> {
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
         if (integer == 1) {
-            Toast.makeText(listFragment.getContext(), listFragment.getString(R.string.connection_error), Toast.LENGTH_LONG).show();
+            Snackbar.make(listFragment.getView(),listFragment.getString(R.string.connection_error),Snackbar.LENGTH_INDEFINITE).setAction("Try again", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listFragment.onRefresh();
+                }
+            }).show();
         } else {
             listFragment.adapter = new RecyclerAdapter(listFragment.getContext(), listFragment.movieDataList);
             if (listFragment.recyclerView.getAdapter() != null) {
