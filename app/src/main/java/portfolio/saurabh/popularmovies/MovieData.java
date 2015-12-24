@@ -24,14 +24,16 @@ public class MovieData implements Parcelable {
     public double user_rating;
     public Date release_date;
     public String backdrop;
+    public int id;
 
-    public MovieData(String title, String posterurl, String plot, double user_rating, Date release_date, String backdrop) {
+    public MovieData(String title, String posterurl, String plot, double user_rating, Date release_date, String backdrop,int id) {
         this.title = title;
         this.posterurl = posterurl;
         this.plot = plot;
         this.user_rating = user_rating;
         this.release_date = release_date;
         this.backdrop=backdrop;
+        this.id=id;
     }
 
     protected MovieData(Parcel in) {
@@ -41,6 +43,7 @@ public class MovieData implements Parcelable {
         user_rating = in.readDouble();
         release_date=new Date(in.readLong());
         backdrop=in.readString();
+        id=in.readInt();
     }
 
     @Override
@@ -51,6 +54,7 @@ public class MovieData implements Parcelable {
         dest.writeDouble(user_rating);
         dest.writeLong(release_date.getTime());
         dest.writeString(backdrop);
+        dest.writeInt(id);
     }
 
     @Override

@@ -26,4 +26,5 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.0'
+    compile 'me.relex:circleindicator:1.1.7@aar'
 }

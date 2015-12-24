@@ -30,7 +30,7 @@ class GetMoviesTask extends AsyncTask<String, Void, Integer> {
     @Override
     protected Integer doInBackground(String... params) {
         try {
-            UriBuilder uri = new UriBuilder(listFragment.getContext());
+            UriBuilder uri = new UriBuilder(listFragment.getContext(),UriBuilder.BASE_URL);
             uri.setSortValue(params[0]);
             URL url = new URL(uri.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -41,7 +41,7 @@ class GetMoviesTask extends AsyncTask<String, Void, Integer> {
                 sb.append(sc.nextLine());
             }
             connection.disconnect();
-            listFragment.movieDataList = JSONParser.parse(sb.toString());
+            listFragment.movieDataList = JSONParser.parseMovies(sb.toString());
             return 0;
         } catch (IOException | ParseException | JSONException | ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
