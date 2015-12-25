@@ -4,8 +4,10 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +52,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
                 Intent intent= new Intent(context,MovieDetail.class);
                 intent.putExtra(MovieDetail.KEY_MOVIE,movie);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    context.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation((AppCompatActivity) context, holder.poster, "poster").toBundle());
+                    AppBarLayout barLayout= (AppBarLayout) ((AppCompatActivity)context).findViewById(R.id.actionbar);
+                    ActivityOptions options =ActivityOptions.makeSceneTransitionAnimation((AppCompatActivity) context,Pair.create((View)holder.poster, "poster"), Pair.create((View)barLayout,"actionbar"));
+                    context.startActivity(intent, options.toBundle());
                 }
                 else
                     context.startActivity(intent);

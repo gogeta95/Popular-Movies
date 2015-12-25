@@ -16,6 +16,8 @@ import android.transition.Explode;
 import android.view.Menu;
 import android.view.Window;
 
+import com.squareup.leakcanary.LeakCanary;
+
 public class MainActivity extends AppCompatActivity {
     public void setupWindowAnimations() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         pager.setAdapter(new PagerAdapter(getSupportFragmentManager(), this));
         tabLayout.setupWithViewPager(pager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        LeakCanary.install(getApplication());
     }
 
     @Override

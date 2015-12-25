@@ -1,5 +1,6 @@
 package portfolio.saurabh.popularmovies;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,10 +8,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.AutoTransition;
 import android.transition.Explode;
-import android.transition.Slide;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -37,7 +37,7 @@ public class MovieDetail extends AppCompatActivity {
     public void setupWindowAnimations() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-            getWindow().setEnterTransition(new Slide(Gravity.BOTTOM));
+            getWindow().setEnterTransition(new AutoTransition());
             getWindow().setReturnTransition(new Explode());
         }
     }
@@ -95,6 +95,14 @@ public class MovieDetail extends AppCompatActivity {
 
         } else
             finish();
+        findViewById(R.id.reviews).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(MovieDetail.this,ReviewActivity.class);
+                intent.putExtra(ReviewActivity.KEY_ID,movie.id);
+                startActivity(intent);
+            }
+        });
 
     }
 

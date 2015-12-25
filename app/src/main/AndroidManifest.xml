@@ -24,7 +24,16 @@
         <activity
             android:name=".MovieDetail"
             android:label="@string/title_activity_movie_detail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ReviewActivity"
+            android:label="@string/title_activity_review"
+            android:parentActivityName=".MovieDetail"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="portfolio.saurabh.popularmovies.MovieDetail" />
+        </activity>
     </application>
 
 </manifest>

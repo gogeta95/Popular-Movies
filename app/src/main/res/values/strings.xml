@@ -7,4 +7,6 @@
     </array>
     <string name="title_activity_movie_detail">MovieDetail</string>
     <string name="connection_error">There was a problem fetching data. Please try again later.</string>
+    <string name="user_reviews">User Reviews</string>
+    <string name="title_activity_review">User Reviews</string>
 </resources>

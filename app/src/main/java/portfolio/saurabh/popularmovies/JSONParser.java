@@ -55,4 +55,24 @@ public class JSONParser {
         else
             throw new JSONException("Source is not YouTube.");
     }
+
+    public static List<ReviewData> parseReviews(String json) throws JSONException {
+        JSONObject object = new JSONObject(json);
+        JSONArray trailers = object.getJSONArray("results");
+        List<ReviewData> strings = new ArrayList<>(trailers.length());
+        for (int i = 0; i < trailers.length(); i++) {
+            try {
+                strings.add(parseReview(trailers.getJSONObject(i)));
+            } catch (JSONException ignored) {
+            }
+        }
+        return strings;
+    }
+
+    public static ReviewData parseReview(JSONObject object) throws JSONException {
+        String user = object.getString("author");
+        String content = object.getString("content");
+        String url = object.getString("url");
+        return new ReviewData(user,content,url);
+    }
 }

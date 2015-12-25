@@ -7,6 +7,7 @@ import android.net.Uri;
 public class UriBuilder {
     public static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
     public static final String BASE_URL_TRAILERS="http://api.themoviedb.org/3/movie/";
+    public static final String REVEIWS="/reviews";
     static final String sortParam = "sort_by";
     static final String keyParam = "api_key";
     static final String HIGHEST_RATED="vote_average.desc";
