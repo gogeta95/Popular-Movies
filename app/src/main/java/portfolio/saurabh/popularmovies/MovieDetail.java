@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
@@ -26,6 +27,7 @@ import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
 import me.relex.circleindicator.CircleIndicator;
+import portfolio.saurabh.popularmovies.database.FavoritesDataSource;
 
 public class MovieDetail extends AppCompatActivity {
     public static final String TAG = "MovieDetail";
@@ -33,6 +35,8 @@ public class MovieDetail extends AppCompatActivity {
     MovieData movie;
     ViewPager pager;
     CircleIndicator indicator;
+    FavoritesDataSource dataSource;
+    FloatingActionButton fab;
 
     public void setupWindowAnimations() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -60,7 +64,7 @@ public class MovieDetail extends AppCompatActivity {
 
             ImageView poster = (ImageView) findViewById(R.id.poster);
             Picasso.with(this).load(RecyclerAdapter.POSTER_BASE_URL + movie.posterurl).error(R.drawable.placeholder).into(poster);
-            pager= (ViewPager) findViewById(R.id.pager);
+            pager = (ViewPager) findViewById(R.id.pager);
             indicator = (CircleIndicator) findViewById(R.id.indicator);
             new FetchTrailersTask(this).execute(movie.id);
             final TextView date = (TextView) findViewById(R.id.date);
@@ -69,11 +73,20 @@ public class MovieDetail extends AppCompatActivity {
             rating.setText("{fa-star} " + movie.user_rating + "/10");
             final TextView plot = (TextView) findViewById(R.id.plot);
             plot.setText(movie.plot.equals("null") ? "" : movie.plot);
-            final FloatingActionButton fab= (FloatingActionButton) findViewById(R.id.fab);
+            fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fab.setImageResource(R.drawable.ic_favorite_red_48dp);
+                    if (dataSource.isMovieExists(movie.id)) {
+                        fab.setImageResource(R.drawable.ic_favorite_white_48dp);
+                        dataSource.removeMovie(movie.id);
+                        Toast.makeText(MovieDetail.this, "Removed from Favorites.", Toast.LENGTH_LONG).show();
+                    } else {
+                        fab.setImageResource(R.drawable.ic_favorite_red_48dp);
+                        dataSource.insertMovie(movie);
+                        Toast.makeText(MovieDetail.this, "Added " + movie.title + " To Favorites!", Toast.LENGTH_LONG).show();
+                    }
+
                 }
             });
             new Handler().postDelayed(new Runnable() {
@@ -87,23 +100,27 @@ public class MovieDetail extends AppCompatActivity {
                         view.animate().alpha(1.0f).setInterpolator(new DecelerateInterpolator()).translationY(0).start();
                         view.setVisibility(View.VISIBLE);
                     }
-                    Animation anim= AnimationUtils.loadAnimation(MovieDetail.this,R.anim.fab_anim);
+                    Animation anim = AnimationUtils.loadAnimation(MovieDetail.this, R.anim.fab_anim);
                     fab.startAnimation(anim);
                     fab.setVisibility(View.VISIBLE);
                 }
-            },250);
+            }, 250);
 
         } else
             finish();
         findViewById(R.id.reviews).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(MovieDetail.this,ReviewActivity.class);
-                intent.putExtra(ReviewActivity.KEY_ID,movie.id);
+                Intent intent = new Intent(MovieDetail.this, ReviewActivity.class);
+                intent.putExtra(ReviewActivity.KEY_ID, movie.id);
                 startActivity(intent);
             }
         });
-
+        dataSource = new FavoritesDataSource(this);
+        dataSource.open(false);
+        if (dataSource.isMovieExists(movie.id)) {
+            fab.setImageResource(R.drawable.ic_favorite_red_48dp);
+        }
     }
 
     @Override
@@ -114,5 +131,11 @@ public class MovieDetail extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dataSource.close();
     }
 }

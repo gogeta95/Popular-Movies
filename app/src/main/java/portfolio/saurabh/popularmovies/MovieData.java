@@ -58,6 +58,19 @@ public class MovieData implements Parcelable {
     }
 
     @Override
+    public String toString() {
+        return "MovieData{" +
+                "title='" + title + '\'' +
+                ", posterurl='" + posterurl + '\'' +
+                ", plot='" + plot + '\'' +
+                ", user_rating=" + user_rating +
+                ", release_date=" + release_date +
+                ", backdrop='" + backdrop + '\'' +
+                ", id=" + id +
+                '}';
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

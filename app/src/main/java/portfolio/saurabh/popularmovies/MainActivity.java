@@ -67,6 +67,8 @@ class PagerAdapter extends FragmentPagerAdapter {
                 return ListFragment.getInstance(UriBuilder.MOST_POPULAR);
             case 1:
                 return ListFragment.getInstance(UriBuilder.HIGHEST_RATED);
+            case 2:
+                return new FavoritesFragment();
             default:
                 return null;
         }

@@ -11,8 +11,6 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
@@ -67,15 +65,4 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
         return movieDataList == null ? 0 : movieDataList.size();
     }
 
-}
-
-class PosterViewHolder extends RecyclerView.ViewHolder {
-    ImageView poster;
-    FrameLayout root;
-
-    public PosterViewHolder(View itemView) {
-        super(itemView);
-        poster = (ImageView) itemView.findViewById(R.id.poster);
-        root = (FrameLayout) itemView.findViewById(R.id.root);
-    }
 }
