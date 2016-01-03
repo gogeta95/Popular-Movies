@@ -11,17 +11,17 @@ import java.util.Scanner;
  * Created by Saurabh on 12/24/2015.
  */
 public class FetchTrailersTask extends AsyncTask<Integer, Void, Void> {
-    MovieDetail movieDetail;
+    DetailsFragment detailsFragment;
     List<String> trailer_thumbs;
 
-    public FetchTrailersTask(MovieDetail movieDetail) {
-        this.movieDetail = movieDetail;
+    public FetchTrailersTask(DetailsFragment detailsFragment) {
+        this.detailsFragment=detailsFragment;
     }
 
 
     @Override
     protected Void doInBackground(Integer... params) {
-        UriBuilder uri = new UriBuilder(movieDetail, UriBuilder.BASE_URL_TRAILERS + params[0] + "/videos");
+        UriBuilder uri = new UriBuilder(detailsFragment.getContext(), UriBuilder.BASE_URL_TRAILERS + params[0] + "/videos");
         try {
             URL url = new URL(uri.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -41,7 +41,7 @@ public class FetchTrailersTask extends AsyncTask<Integer, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        movieDetail.pager.setAdapter(new TrailerPagerAdapter(movieDetail.getSupportFragmentManager(), trailer_thumbs));
-        movieDetail.indicator.setViewPager(movieDetail.pager);
+        detailsFragment.pager.setAdapter(new TrailerPagerAdapter(detailsFragment.getActivity().getSupportFragmentManager(), trailer_thumbs));
+        detailsFragment.indicator.setViewPager(detailsFragment.pager);
     }
 }

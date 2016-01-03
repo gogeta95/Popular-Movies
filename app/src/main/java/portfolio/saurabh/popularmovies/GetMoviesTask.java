@@ -53,7 +53,7 @@ class GetMoviesTask extends AsyncTask<String, Void, Integer> {
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
         if (integer == 1) {
-            Snackbar.make(listFragment.getView(),listFragment.getString(R.string.connection_error),Snackbar.LENGTH_INDEFINITE).setAction("Try again", new View.OnClickListener() {
+            Snackbar.make(listFragment.getView(),listFragment.getString(R.string.connection_error),Snackbar.LENGTH_SHORT).setAction("Try again", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listFragment.onRefresh();

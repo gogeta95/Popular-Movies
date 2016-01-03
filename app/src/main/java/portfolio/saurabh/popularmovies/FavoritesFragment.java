@@ -17,6 +17,7 @@ import portfolio.saurabh.popularmovies.database.FavoritesDataSource;
 public class FavoritesFragment extends Fragment {
     RecyclerView recyclerView;
     FavoritesDataSource dataSource;
+    private CursorAdapter mAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +35,8 @@ public class FavoritesFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         else
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        mAdapter=new CursorAdapter(getContext(), dataSource.getAllMovies());
+        recyclerView.setAdapter(mAdapter);
         return layout;
     }
 
@@ -46,6 +49,6 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        recyclerView.setAdapter(new CursorAdapter(getContext(), dataSource.getAllMovies()));
+        mAdapter.swapCursor(dataSource.getAllMovies());
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,105 +9,10 @@
     tools:context="portfolio.saurabh.popularmovies.MovieDetail"
     tools:showIn="@layout/activity_movie_detail">
 
-    <RelativeLayout
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="portfolio.saurabh.popularmovies.DetailsFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:paddingBottom="@dimen/activity_vertical_margin">
-
-        <FrameLayout
-            android:id="@+id/trailers"
-            android:layout_width="match_parent"
-            android:layout_height="250dp">
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-            <me.relex.circleindicator.CircleIndicator
-                android:id="@+id/indicator"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="bottom" />
-        </FrameLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="220dp"
-            android:src="@drawable/ic_favorite_white_48dp"
-            android:visibility="invisible" />
-
-        <ImageView
-            android:id="@+id/poster"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="32dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="225dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:transitionName="poster" />
-
-        <TextView
-            android:id="@+id/date"
-            style="@style/Base.TextAppearance.AppCompat.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/trailers"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_toEndOf="@id/poster"
-            android:layout_toRightOf="@id/poster"
-            android:text="In theatres "
-            android:textColor="?attr/colorAccent"
-            android:textStyle="italic"
-            android:visibility="invisible" />
-
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/rating"
-            style="@style/Base.TextAppearance.AppCompat.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/date"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_toEndOf="@id/poster"
-            android:layout_toRightOf="@id/poster"
-            android:gravity="center"
-            android:text="{fa-star} Rating"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/plot"
-            style="@style/Base.TextAppearance.AppCompat.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/poster"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:lineSpacingMultiplier="1.3"
-            android:text="Plot"
-            android:visibility="invisible" />
-        <Button
-            android:id="@+id/reviews"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/plot"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/reviews_button"
-            android:elevation="2dp"
-            android:text="@string/user_reviews" />
-    </RelativeLayout>
-</ScrollView>
+        android:layout_height="match_parent"
+        tools:layout="@layout/movie_detail_fragment" />
+</LinearLayout>
