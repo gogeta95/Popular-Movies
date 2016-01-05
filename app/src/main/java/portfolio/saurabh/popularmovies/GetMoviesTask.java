@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 
-class GetMoviesTask extends AsyncTask<String, Void, Integer> {
+public class GetMoviesTask extends AsyncTask<String, Void, Integer> {
     private ListFragment listFragment;
 
     public GetMoviesTask(ListFragment listFragment) {

@@ -3,8 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="portfolio.saurabh.popularmovies.MainActivity">
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="never" >
+        android:icon="@drawable/ic_sort_white_48dp"
+        android:title="Sort By"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group
+                android:id="@+id/action_sort"
+                android:checkableBehavior="single">
+                <item android:id="@+id/action_popluar" android:checked="true"  android:title="Most Popular" />
+                <item android:id="@+id/action_rated" android:title="Highest Rated" />
+                <item android:id="@+id/action_favorites" android:title="Favorites" />
+            </group>
+        </menu>
     </item>
 </menu>

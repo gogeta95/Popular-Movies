@@ -1,24 +1,22 @@
 package portfolio.saurabh.popularmovies;
 
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.ChangeClipBounds;
 import android.transition.Explode;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 
-import com.squareup.leakcanary.LeakCanary;
-
 public class MainActivity extends AppCompatActivity {
+    private static final String KEY_MENU_ITEM = "MENU_ITEM";
+    private static int menuitem;
+
     public void setupWindowAnimations() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -33,14 +31,18 @@ public class MainActivity extends AppCompatActivity {
         setupWindowAnimations();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState != null && savedInstanceState.getInt(KEY_MENU_ITEM) != 0)
+            menuitem = savedInstanceState.getInt(KEY_MENU_ITEM);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        ViewPager pager = (ViewPager) findViewById(R.id.viewpager);
-        pager.setAdapter(new PagerAdapter(getSupportFragmentManager(), this));
-        tabLayout.setupWithViewPager(pager);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        LeakCanary.install(getApplication());
+//        LeakCanary.install(getApplication());
+        if (savedInstanceState == null)
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_content, ListFragment.getInstance(UriBuilder.MOST_POPULAR))
+                    .commit();
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Log.d("abc", metrics.toString());
     }
 
     @Override
@@ -50,39 +52,48 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-}
-
-class PagerAdapter extends FragmentPagerAdapter {
-    String[] Titles;
-
-    public PagerAdapter(FragmentManager fm, Context context) {
-        super(fm);
-        Titles = context.getResources().getStringArray(R.array.tab_labels);
-    }
-
     @Override
-    public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return ListFragment.getInstance(UriBuilder.MOST_POPULAR);
-            case 1:
-                return ListFragment.getInstance(UriBuilder.HIGHEST_RATED);
-            case 2:
-                return new FavoritesFragment();
-            default:
-                return null;
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (menuitem != 0) {
+            menu.findItem(menuitem).setChecked(true);
         }
-
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public int getCount() {
-        return Titles.length;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.isChecked())
+            return super.onOptionsItemSelected(item);
+        else {
+            item.setChecked(true);
+            if (item.getItemId() == R.id.action_favorites || item.getItemId() == R.id.action_popluar || item.getItemId() == R.id.action_rated)
+                menuitem = item.getItemId();
+            switch (item.getItemId()) {
+                case R.id.action_popluar:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.main_content, ListFragment.getInstance(UriBuilder.MOST_POPULAR))
+                            .commit();
+                    return true;
+                case R.id.action_rated:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.main_content, ListFragment.getInstance(UriBuilder.HIGHEST_RATED))
+                            .commit();
+                    return true;
+                case R.id.action_favorites:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.main_content, new FavoritesFragment())
+                            .commit();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
     }
 
     @Override
-    public CharSequence getPageTitle(int position) {
-        return Titles[position];
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_MENU_ITEM, menuitem);
     }
 }
 
