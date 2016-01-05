@@ -38,6 +38,10 @@ public class MovieDetail extends AppCompatActivity {
             getSupportActionBar().setTitle(((MovieData)getIntent().getParcelableExtra(KEY_MOVIE)).title);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        if (savedInstanceState == null)
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detailFragment, DetailsFragment.getInstance(getIntent().getParcelableExtra(KEY_MOVIE)))
+                    .commit();
     }
 
     @Override

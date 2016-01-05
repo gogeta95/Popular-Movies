@@ -3,6 +3,7 @@ package portfolio.saurabh.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -37,16 +38,23 @@ public class DetailsFragment extends Fragment {
     FavoritesDataSource dataSource;
     FloatingActionButton fab;
 
+    public static DetailsFragment getInstance(Parcelable movie) {
+        DetailsFragment detailsFragment = new DetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_MOVIE, movie);
+        detailsFragment.setArguments(bundle);
+        return detailsFragment;
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.movie_detail_fragment, container, false);
         super.onCreate(savedInstanceState);
         Iconify.with(new FontAwesomeModule());
-        if (getActivity().getIntent() != null && getActivity().getIntent().getParcelableExtra(KEY_MOVIE) != null) {
-            movie = getActivity().getIntent().getParcelableExtra(KEY_MOVIE);
+        if (getArguments() != null && getArguments().getParcelable(KEY_MOVIE) != null) {
+            movie = getArguments().getParcelable(KEY_MOVIE);
             ImageView poster = (ImageView) layout.findViewById(R.id.poster);
-            Picasso.with(getContext()).load(RecyclerAdapter.POSTER_BASE_URL + movie.posterurl).error(R.drawable.placeholder).into(poster);
+            Picasso.with(getActivity()).load(RecyclerAdapter.POSTER_BASE_URL + movie.posterurl).error(R.drawable.placeholder).into(poster);
             pager = (ViewPager) layout.findViewById(R.id.pager);
             indicator = (CircleIndicator) layout.findViewById(R.id.indicator);
             new FetchTrailersTask(this).execute(movie.id);
@@ -63,11 +71,11 @@ public class DetailsFragment extends Fragment {
                     if (dataSource.isMovieExists(movie.id)) {
                         fab.setImageResource(R.drawable.ic_favorite_white_48dp);
                         dataSource.removeMovie(movie.id);
-                        Toast.makeText(getContext(), "Removed from Favorites.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Removed from Favorites.", Toast.LENGTH_LONG).show();
                     } else {
                         fab.setImageResource(R.drawable.ic_favorite_red_48dp);
                         dataSource.insertMovie(movie);
-                        Toast.makeText(getContext(), "Added " + movie.title + " To Favorites!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Added " + movie.title + " To Favorites!", Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -83,7 +91,7 @@ public class DetailsFragment extends Fragment {
                         view.animate().alpha(1.0f).setInterpolator(new DecelerateInterpolator()).translationY(0).start();
                         view.setVisibility(View.VISIBLE);
                     }
-                    Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.fab_anim);
+                    Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_anim);
                     fab.startAnimation(anim);
                     fab.setVisibility(View.VISIBLE);
                 }
@@ -93,12 +101,12 @@ public class DetailsFragment extends Fragment {
         layout.findViewById(R.id.reviews).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ReviewActivity.class);
+                Intent intent = new Intent(getActivity(), ReviewActivity.class);
                 intent.putExtra(ReviewActivity.KEY_ID, movie.id);
                 startActivity(intent);
             }
         });
-        dataSource = new FavoritesDataSource(getContext());
+        dataSource = new FavoritesDataSource(getActivity());
         dataSource.open(false);
         if (dataSource.isMovieExists(movie.id)) {
             fab.setImageResource(R.drawable.ic_favorite_red_48dp);

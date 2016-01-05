@@ -3,6 +3,7 @@ package portfolio.saurabh.popularmovies;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class TrailerPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Log.d("abc", thumbs.get(position));
         return TrailerFragment.getInstance(thumbs.get(position));
     }
 

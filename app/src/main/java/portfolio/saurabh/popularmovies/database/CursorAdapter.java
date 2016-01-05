@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
+import portfolio.saurabh.popularmovies.DetailsFragment;
+import portfolio.saurabh.popularmovies.MainActivity;
 import portfolio.saurabh.popularmovies.MovieData;
 import portfolio.saurabh.popularmovies.MovieDetail;
 import portfolio.saurabh.popularmovies.PosterViewHolder;
@@ -49,20 +52,31 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<PosterViewHolder> {
         if (!(poster_url.isEmpty() || poster_url.equals("null"))) {
             Picasso.with(context).load(RecyclerAdapter.POSTER_BASE_URL + poster_url).error(R.drawable.placeholder).into(holder.poster);
         }
+        if (!MainActivity.mIsDualPane) {
+            holder.root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, MovieDetail.class);
+                    intent.putExtra(MovieDetail.KEY_MOVIE, movie);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        AppBarLayout barLayout = (AppBarLayout) ((AppCompatActivity) context).findViewById(R.id.actionbar);
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((AppCompatActivity) context, Pair.create((View) holder.poster, "poster"), Pair.create((View) barLayout, "actionbar"));
+                        context.startActivity(intent, options.toBundle());
+                    } else
+                        context.startActivity(intent);
+                }
+            });
+        } else {
+            holder.root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.movie_detail, DetailsFragment.getInstance(movie))
+                            .commit();
+                }
+            });
+        }
 
-        holder.root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, MovieDetail.class);
-                intent.putExtra(MovieDetail.KEY_MOVIE, movie);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    AppBarLayout barLayout = (AppBarLayout) ((AppCompatActivity) context).findViewById(R.id.actionbar);
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((AppCompatActivity) context, Pair.create((View) holder.poster, "poster"), Pair.create((View) barLayout, "actionbar"));
-                    context.startActivity(intent, options.toBundle());
-                } else
-                    context.startActivity(intent);
-            }
-        });
     }
 
     @Override

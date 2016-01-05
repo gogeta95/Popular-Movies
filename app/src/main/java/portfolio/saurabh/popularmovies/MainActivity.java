@@ -11,10 +11,12 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 
 public class MainActivity extends AppCompatActivity {
     private static final String KEY_MENU_ITEM = "MENU_ITEM";
+    public static boolean mIsDualPane;
     private static int menuitem;
 
     public void setupWindowAnimations() {
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setupWindowAnimations();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        View detailView = findViewById(R.id.movie_detail);
+        mIsDualPane = detailView != null && detailView.getVisibility() == View.VISIBLE;
         if (savedInstanceState != null && savedInstanceState.getInt(KEY_MENU_ITEM) != 0)
             menuitem = savedInstanceState.getInt(KEY_MENU_ITEM);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
