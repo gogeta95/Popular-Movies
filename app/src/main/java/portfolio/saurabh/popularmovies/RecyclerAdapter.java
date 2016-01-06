@@ -30,6 +30,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.movieDataList = movieDataList;
+        if (MainActivity.mIsDualPane) {
+            ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail, DetailsFragment.getInstance(movieDataList.get(0)))
+                    .commit();
+        }
     }
 
     @Override
@@ -63,6 +68,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
                 @Override
                 public void onClick(View v) {
                     ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_top)
                             .replace(R.id.movie_detail, DetailsFragment.getInstance(movie))
                             .commit();
                 }

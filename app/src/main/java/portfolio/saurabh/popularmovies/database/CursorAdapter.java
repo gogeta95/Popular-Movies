@@ -36,6 +36,20 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<PosterViewHolder> {
         super(context, cursor);
         inflater = LayoutInflater.from(context);
         this.context = context;
+        if (MainActivity.mIsDualPane) {
+            cursor.moveToFirst();
+            int id = cursor.getInt(0);
+            String title = cursor.getString(1);
+            String poster = cursor.getString(2);
+            String plot = cursor.getString(3);
+            double rating = cursor.getDouble(4);
+            Date release = new Date(cursor.getLong(5));
+            String backdrop = cursor.getString(6);
+            final MovieData movie = new MovieData(title, poster, plot, rating, release, backdrop, id);
+            ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail, DetailsFragment.getInstance(movie))
+                    .commit();
+        }
     }
 
     @Override
@@ -71,6 +85,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<PosterViewHolder> {
                 @Override
                 public void onClick(View v) {
                     ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_top)
                             .replace(R.id.movie_detail, DetailsFragment.getInstance(movie))
                             .commit();
                 }
