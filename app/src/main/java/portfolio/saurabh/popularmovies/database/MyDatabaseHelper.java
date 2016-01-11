@@ -7,7 +7,6 @@ import android.util.Log;
 
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
-
     static final String TABLE_FAVORITES = "favorites";
     static final String COLUMN_ID = "_id";
     static final String COLUMN_TITLE = "title";
@@ -27,9 +26,16 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_RATING + " real not null, "
             + COLUMN_RELEASE + " integer not null, "
             + COLUMN_BACKDROP + " text not null);";
+    private static MyDatabaseHelper mInstance = null;
 
-    public MyDatabaseHelper(Context context) {
+    private MyDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static MyDatabaseHelper getInstance(Context context) {
+        if (mInstance == null)
+            return new MyDatabaseHelper(context.getApplicationContext());
+        else return mInstance;
     }
 
     @Override

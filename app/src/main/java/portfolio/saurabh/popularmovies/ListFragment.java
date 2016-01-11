@@ -46,7 +46,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if(getActivity().getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         else
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.progress_colors));

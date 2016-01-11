@@ -15,7 +15,7 @@ public class FavoritesDataSource {
     private MyDatabaseHelper dbHelper;
 
     public FavoritesDataSource(Context context) {
-        dbHelper = new MyDatabaseHelper(context);
+        dbHelper = MyDatabaseHelper.getInstance(context);
     }
 
     public void open(boolean readonly) {
@@ -23,7 +23,7 @@ public class FavoritesDataSource {
     }
 
     public void close() {
-        dbHelper.close();
+        database.close();
     }
 
     private MovieData cursorToMovie(Cursor cursor) {
