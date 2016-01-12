@@ -1,12 +1,12 @@
 package portfolio.saurabh.popularmovies;
 
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +33,12 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.favorites_list, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
-        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        else
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels / metrics.density);
+        //For Tabs
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+        width = isTablet ? (width / 2) : width;
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), width / 140));
         cursor = dataSource.getAllMovies();
         mAdapter = new CursorAdapter(getContext(), cursor);
         recyclerView.setAdapter(mAdapter);
