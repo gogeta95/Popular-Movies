@@ -24,6 +24,6 @@ public class TrailerPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return thumbs.size();
+        return thumbs == null ? 0 : thumbs.size();
     }
 }

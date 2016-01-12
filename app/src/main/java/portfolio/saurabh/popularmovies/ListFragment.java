@@ -1,6 +1,5 @@
 package portfolio.saurabh.popularmovies;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -8,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +43,12 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.list_layout, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
-        if(getActivity().getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        else
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int width = (int) (metrics.widthPixels / metrics.density);
+        //For Tabs
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+        width = isTablet ? (width / 2) : width;
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), width / 140));
         refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.progress_colors));

@@ -41,8 +41,6 @@ public class FetchTrailersTask extends AsyncTask<Integer, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        if (detailsFragment.getActivity() == null)
-            return;
         detailsFragment.pager.setAdapter(new TrailerPagerAdapter(detailsFragment.getActivity().getSupportFragmentManager(), trailer_thumbs));
         detailsFragment.indicator.setViewPager(detailsFragment.pager);
 //        Log.d("async","done");

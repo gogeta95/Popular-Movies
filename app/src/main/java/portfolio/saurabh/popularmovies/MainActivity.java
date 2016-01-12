@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.ChangeClipBounds;
 import android.transition.Explode;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +15,7 @@ import android.view.Window;
 public class MainActivity extends AppCompatActivity {
     private static final String KEY_MENU_ITEM = "MENU_ITEM";
     public static boolean mIsDualPane;
-    private static int menuitem;
+    private int menuitem;
 
     public void setupWindowAnimations() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -44,9 +42,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main_content, ListFragment.getInstance(UriBuilder.MOST_POPULAR))
                     .commit();
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        Log.d("abc", metrics.toString());
+
     }
 
     @Override
