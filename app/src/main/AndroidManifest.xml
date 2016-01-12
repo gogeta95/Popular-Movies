@@ -38,7 +38,8 @@
             android:name=".database.MyContentProvider"
             android:authorities="portfolio.saurabh.popularmovies.provider"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:syncable="true" />
     </application>
 
 </manifest>
