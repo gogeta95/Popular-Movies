@@ -1,5 +1,6 @@
 package portfolio.saurabh.popularmovies;
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,7 +38,8 @@ public class FavoritesFragment extends Fragment {
         int width = (int) (metrics.widthPixels / metrics.density);
         //For Tabs
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        width = isTablet ? (width / 2) : width;
+        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        width = isTablet && isLandscape ? (width / 2) : width;
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), width / 140));
         cursor = dataSource.getAllMovies();
         mAdapter = new CursorAdapter(getContext(), cursor);

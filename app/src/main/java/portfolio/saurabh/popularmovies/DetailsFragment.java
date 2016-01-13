@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -38,9 +39,7 @@ import me.relex.circleindicator.CircleIndicator;
 import portfolio.saurabh.popularmovies.database.FavoritesDataSource;
 import portfolio.saurabh.popularmovies.util.MaterialColorMapUtils;
 
-/**
- * Created by Saurabh on 1/3/2016.
- */
+
 public class DetailsFragment extends Fragment {
     public static final String TAG = "MovieDetail";
     public static final String KEY_MOVIE = "MOVIE";
@@ -99,6 +98,7 @@ public class DetailsFragment extends Fragment {
             }
         };
         poster.setTag(target);
+        final FragmentActivity mActivity = getActivity();
         Picasso.with(getActivity()).load(RecyclerAdapter.POSTER_BASE_URL + movie.posterurl).error(R.drawable.placeholder).into(target);
         pager = (ViewPager) layout.findViewById(R.id.pager);
         indicator = (CircleIndicator) layout.findViewById(R.id.indicator);
@@ -137,7 +137,8 @@ public class DetailsFragment extends Fragment {
                     view.animate().alpha(1.0f).setInterpolator(new DecelerateInterpolator()).translationY(0).start();
                     view.setVisibility(View.VISIBLE);
                 }
-                Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.fab_anim);
+//                Log.d("abc", getActivity().toString());
+                Animation anim = AnimationUtils.loadAnimation(mActivity, R.anim.fab_anim);
                 fab.startAnimation(anim);
                 fab.setVisibility(View.VISIBLE);
             }
