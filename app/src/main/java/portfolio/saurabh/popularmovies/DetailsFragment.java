@@ -91,6 +91,7 @@ public class DetailsFragment extends Fragment {
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
+                poster.setImageDrawable(errorDrawable);
             }
 
             @Override
