@@ -1,5 +1,6 @@
 package portfolio.saurabh.popularmovies;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -47,10 +48,12 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         int width = (int) (metrics.widthPixels / metrics.density);
         //For Tabs
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        width = isTablet ? (width / 2) : width;
+        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        width = isTablet && isLandscape ? (width / 2) : width;
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), width / 140));
         refreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refresh);
         refreshLayout.setOnRefreshListener(this);
+        setHasOptionsMenu(true);
         refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.progress_colors));
         progressBar = (ProgressBar) layout.findViewById(R.id.progressBar);
         if (savedInstanceState != null && savedInstanceState.getParcelableArrayList(KEY_DATA) != null) {
@@ -80,5 +83,4 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() {
         new GetMoviesTask(this).execute(getArguments().getString(KEY_TITLE));
     }
-
 }

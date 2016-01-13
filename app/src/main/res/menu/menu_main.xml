@@ -4,6 +4,7 @@
     tools:context="portfolio.saurabh.popularmovies.MainActivity">
     <item
         android:icon="@drawable/ic_sort_white_48dp"
+        android:orderInCategory="100"
         android:title="Sort By"
         app:showAsAction="ifRoom">
         <menu>

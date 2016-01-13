@@ -11,10 +11,14 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -45,6 +49,7 @@ public class DetailsFragment extends Fragment {
     CircleIndicator indicator;
     FavoritesDataSource dataSource;
     FloatingActionButton fab;
+    ShareActionProvider shareActionProvider;
 
     public static DetailsFragment getInstance(Parcelable movie) {
         DetailsFragment detailsFragment = new DetailsFragment();
@@ -62,12 +67,13 @@ public class DetailsFragment extends Fragment {
         dataSource = new FavoritesDataSource(getActivity());
         dataSource.open(false);
         Iconify.with(new FontAwesomeModule());
+        setHasOptionsMenu(true);
         movie = getArguments().getParcelable(KEY_MOVIE);
 //        if (savedInstanceState == null) {
         final ImageView poster = (ImageView) layout.findViewById(R.id.poster);
         Target target = new Target() {
             @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
                 MaterialColorMapUtils colorMapUtils = new MaterialColorMapUtils(getResources());
                 int primaryColor = MaterialColorMapUtils.colorFromBitmap(bitmap);
                 if (primaryColor != 0) {
@@ -79,30 +85,30 @@ public class DetailsFragment extends Fragment {
                         getActivity().getWindow().setStatusBarColor(palette.mSecondaryColor);
                     }
                 }
+
                 poster.setImageBitmap(bitmap);
+
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
-
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
-
             }
         };
+        poster.setTag(target);
         Picasso.with(getActivity()).load(RecyclerAdapter.POSTER_BASE_URL + movie.posterurl).error(R.drawable.placeholder).into(target);
-            pager = (ViewPager) layout.findViewById(R.id.pager);
-            indicator = (CircleIndicator) layout.findViewById(R.id.indicator);
-        Log.d("abc3", getActivity().toString());
-            new FetchTrailersTask(this).execute(movie.id);
-            final TextView date = (TextView) layout.findViewById(R.id.date);
-            date.setText("In theatres " + DateConvert.convert(movie.release_date));
-            final IconTextView rating = (IconTextView) layout.findViewById(R.id.rating);
-            rating.setText("{fa-star} " + movie.user_rating + "/10");
-            final TextView plot = (TextView) layout.findViewById(R.id.plot);
-            plot.setText(movie.plot.equals("null") ? "" : movie.plot);
+        pager = (ViewPager) layout.findViewById(R.id.pager);
+        indicator = (CircleIndicator) layout.findViewById(R.id.indicator);
+//          Log.d("abc3", getActivity().toString());
+        final TextView date = (TextView) layout.findViewById(R.id.date);
+        date.setText("In theatres " + DateConvert.convert(movie.release_date));
+        final IconTextView rating = (IconTextView) layout.findViewById(R.id.rating);
+        rating.setText("{fa-star} " + movie.user_rating + "/10");
+        final TextView plot = (TextView) layout.findViewById(R.id.plot);
+        plot.setText(movie.plot.equals("null") ? "" : movie.plot);
 
         fab = (FloatingActionButton) layout.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -158,5 +164,14 @@ public class DetailsFragment extends Fragment {
         if (dataSource != null)
             dataSource.close();
         Log.d("abc", "closed");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.share_menu, menu);
+        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
+        //Must start after share Provider has been initialized.
+        new FetchTrailersTask(this).execute(movie.id);
     }
 }

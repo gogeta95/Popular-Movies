@@ -1,5 +1,6 @@
 package portfolio.saurabh.popularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 
 import java.net.HttpURLConnection;
@@ -32,6 +33,7 @@ public class FetchTrailersTask extends AsyncTask<Integer, Void, Void> {
                 sb.append(sc.nextLine());
             }
             connection.disconnect();
+            //Stores Video keys
             trailer_thumbs = JSONParser.parseTrailers(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,6 +43,10 @@ public class FetchTrailersTask extends AsyncTask<Integer, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out " + detailsFragment.movie.title + "! https://www.youtube.com/watch?v=" + trailer_thumbs.get(0));
+        shareIntent.setType("text/plain");
+        detailsFragment.shareActionProvider.setShareIntent(shareIntent);
         detailsFragment.pager.setAdapter(new TrailerPagerAdapter(detailsFragment.getActivity().getSupportFragmentManager(), trailer_thumbs));
         detailsFragment.indicator.setViewPager(detailsFragment.pager);
 //        Log.d("async","done");
