@@ -43,10 +43,12 @@ public class FetchTrailersTask extends AsyncTask<Integer, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out " + detailsFragment.movie.title + "! https://www.youtube.com/watch?v=" + trailer_thumbs.get(0));
-        shareIntent.setType("text/plain");
-        detailsFragment.shareActionProvider.setShareIntent(shareIntent);
+        if (!trailer_thumbs.isEmpty()) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out " + detailsFragment.movie.title + "! https://www.youtube.com/watch?v=" + trailer_thumbs.get(0));
+            shareIntent.setType("text/plain");
+            detailsFragment.shareActionProvider.setShareIntent(shareIntent);
+        }
         detailsFragment.pager.setAdapter(new TrailerPagerAdapter(detailsFragment.getChildFragmentManager(), trailer_thumbs));
         detailsFragment.indicator.setViewPager(detailsFragment.pager);
 //        Log.d("async","done");
