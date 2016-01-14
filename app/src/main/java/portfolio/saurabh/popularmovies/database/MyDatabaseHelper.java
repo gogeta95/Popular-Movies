@@ -34,8 +34,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     public static MyDatabaseHelper getInstance(Context context) {
         if (mInstance == null)
-            return new MyDatabaseHelper(context.getApplicationContext());
-        else return mInstance;
+            mInstance = new MyDatabaseHelper(context.getApplicationContext());
+        return mInstance;
     }
 
     @Override
