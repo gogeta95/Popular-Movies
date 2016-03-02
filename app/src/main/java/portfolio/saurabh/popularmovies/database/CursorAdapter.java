@@ -19,7 +19,7 @@ import java.util.Date;
 
 import portfolio.saurabh.popularmovies.DetailsFragment;
 import portfolio.saurabh.popularmovies.MainActivity;
-import portfolio.saurabh.popularmovies.MovieData;
+import portfolio.saurabh.popularmovies.Movie;
 import portfolio.saurabh.popularmovies.MovieDetail;
 import portfolio.saurabh.popularmovies.PosterViewHolder;
 import portfolio.saurabh.popularmovies.R;
@@ -45,7 +45,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<PosterViewHolder> {
             double rating = cursor.getDouble(4);
             Date release = new Date(cursor.getLong(5));
             String backdrop = cursor.getString(6);
-            final MovieData movie = new MovieData(title, poster, plot, rating, release, backdrop, id);
+            final Movie movie = new Movie(title, poster, plot, rating, release, backdrop, id);
             ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
                     .replace(R.id.movie_detail, DetailsFragment.getInstance(movie))
                     .commit();
@@ -61,7 +61,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<PosterViewHolder> {
         double rating = cursor.getDouble(4);
         Date release = new Date(cursor.getLong(5));
         String backdrop = cursor.getString(6);
-        final MovieData movie = new MovieData(title, poster, plot, rating, release, backdrop, id);
+        final Movie movie = new Movie(title, poster, plot, rating, release, backdrop, id);
         String poster_url = movie.posterurl;
         if (!(poster_url.isEmpty() || poster_url.equals("null"))) {
             Picasso.with(context).load(RecyclerAdapter.POSTER_BASE_URL + poster_url).error(R.drawable.placeholder).into(holder.poster);

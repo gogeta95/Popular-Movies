@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
     private static final String KEY_MENU_ITEM = "MENU_ITEM";
     public static boolean mIsDualPane;
     private int menuitem;
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main_content, ListFragment.getInstance(UriBuilder.MOST_POPULAR))
                     .commit();
-
     }
 
     @Override

@@ -56,9 +56,6 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (cursor != null) {
-            cursor.close();
-        }
         cursor = dataSource.getAllMovies();
         mAdapter.swapCursor(cursor);
     }

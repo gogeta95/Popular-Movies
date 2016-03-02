@@ -37,13 +37,20 @@ import com.squareup.picasso.Target;
 
 import me.relex.circleindicator.CircleIndicator;
 import portfolio.saurabh.popularmovies.database.FavoritesDataSource;
+import portfolio.saurabh.popularmovies.retrofit.MovieService;
+import portfolio.saurabh.popularmovies.retrofit.TrailerList;
 import portfolio.saurabh.popularmovies.util.MaterialColorMapUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class DetailsFragment extends Fragment {
     public static final String TAG = "MovieDetail";
     public static final String KEY_MOVIE = "MOVIE";
-    MovieData movie;
+    Movie movie;
     ViewPager pager;
     CircleIndicator indicator;
     FavoritesDataSource dataSource;
@@ -174,6 +181,27 @@ public class DetailsFragment extends Fragment {
         inflater.inflate(R.menu.share_menu, menu);
         shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
         //Must start after share Provider has been initialized.
-        new FetchTrailersTask(this).execute(movie.id);
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(UriBuilder.BASE).addConverterFactory(GsonConverterFactory.create()).build();
+        MovieService service = retrofit.create(MovieService.class);
+        Call<TrailerList> listCall = service.listTrailers(String.valueOf(movie.id), getString(R.string.api_key));
+        listCall.enqueue(new Callback<TrailerList>() {
+            @Override
+            public void onResponse(Call<TrailerList> call, Response<TrailerList> response) {
+                TrailerList list = response.body();
+                if (!list.trailers.isEmpty()) {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out " + movie.title + "! https://www.youtube.com/watch?v=" + list.trailers.get(0).getKey());
+                    shareIntent.setType("text/plain");
+                    shareActionProvider.setShareIntent(shareIntent);
+                }
+                pager.setAdapter(new TrailerPagerAdapter(getChildFragmentManager(), list.trailers));
+                indicator.setViewPager(pager);
+            }
+
+            @Override
+            public void onFailure(Call<TrailerList> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }

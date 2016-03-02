@@ -7,7 +7,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
+
+import portfolio.saurabh.popularmovies.retrofit.MovieService;
+import portfolio.saurabh.popularmovies.retrofit.ReviewList;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     public static final String KEY_ID = "ID";
@@ -31,21 +40,41 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.progress_colors));
         refreshLayout.setOnRefreshListener(this);
-       onRefresh();
+        onRefresh();
     }
 
     @Override
     public void onRefresh() {
-        new GetReviewsTask(this).execute(getIntent().getIntExtra(KEY_ID,0));
+//        new GetReviewsTask(this).execute(getIntent().getIntExtra(KEY_ID,0));
+        recyclerView.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(UriBuilder.BASE).addConverterFactory(GsonConverterFactory.create()).build();
+        MovieService service = retrofit.create(MovieService.class);
+        Call<ReviewList> listCall = service.listReviews(String.valueOf(getIntent().getIntExtra(KEY_ID, 0)), getString(R.string.api_key));
+        listCall.enqueue(new Callback<ReviewList>() {
+            @Override
+            public void onResponse(Call<ReviewList> call, Response<ReviewList> response) {
+                ReviewList reviewList = response.body();
+                if (reviewList != null)
+                    recyclerView.setAdapter(new ReviewAdapter(ReviewActivity.this, reviewList.reviewList));
+                recyclerView.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+                refreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<ReviewList> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
-        }
-        else
+        } else
             return super.onOptionsItemSelected(item);
     }
 }

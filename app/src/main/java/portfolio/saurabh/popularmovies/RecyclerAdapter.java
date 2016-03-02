@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import portfolio.saurabh.popularmovies.retrofit.MovieList;
 
 
 public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
@@ -24,15 +24,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     public static final String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w500";
     LayoutInflater inflater;
     Context context;
-    List<MovieData> movieDataList;
+    MovieList movieList;
 
-    public RecyclerAdapter(Context context, List<MovieData> movieDataList) {
+    public RecyclerAdapter(Context context, MovieList movieList) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.movieDataList = movieDataList;
+        this.movieList = movieList;
         if (MainActivity.mIsDualPane) {
             ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail, DetailsFragment.getInstance(movieDataList.get(0)))
+                    .replace(R.id.movie_detail, DetailsFragment.getInstance(movieList.movies.get(0)))
                     .commit();
         }
     }
@@ -44,9 +44,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
 
     @Override
     public void onBindViewHolder(final PosterViewHolder holder, int position) {
-        final MovieData movie = movieDataList.get(position);
+        final Movie movie = movieList.movies.get(position);
         String poster_url = movie.posterurl;
-        if (!(poster_url.isEmpty() || poster_url.equals("null"))) {
+        if (poster_url != null && !(poster_url.isEmpty() || poster_url.equals("null"))) {
             Picasso.with(context).load(POSTER_BASE_URL + poster_url).placeholder(R.drawable.placeholder).error(R.drawable.placeholder).into(holder.poster);
         }
         if (!MainActivity.mIsDualPane) {
@@ -79,7 +79,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
 
     @Override
     public int getItemCount() {
-        return movieDataList == null ? 0 : movieDataList.size();
+        return movieList.movies == null ? 0 : movieList.movies.size();
     }
 
 }

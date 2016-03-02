@@ -3,6 +3,8 @@ package portfolio.saurabh.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Saurabh on 12/25/2015.
  */
@@ -18,8 +20,11 @@ public class ReviewData implements Parcelable {
             return new ReviewData[size];
         }
     };
+    @SerializedName("author")
     public String user;
+    @SerializedName("content")
     public String review;
+    @SerializedName("url")
     public String url;
 
     protected ReviewData(Parcel in) {
