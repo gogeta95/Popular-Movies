@@ -12,11 +12,12 @@ import android.widget.ProgressBar;
 
 import portfolio.saurabh.popularmovies.retrofit.MovieService;
 import portfolio.saurabh.popularmovies.retrofit.ReviewList;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     public static final String KEY_ID = "ID";
@@ -48,10 +49,32 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
 //        new GetReviewsTask(this).execute(getIntent().getIntExtra(KEY_ID,0));
         recyclerView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(UriBuilder.BASE).addConverterFactory(GsonConverterFactory.create()).build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(UriBuilder.BASE)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         MovieService service = retrofit.create(MovieService.class);
-        Call<ReviewList> listCall = service.listReviews(String.valueOf(getIntent().getIntExtra(KEY_ID, 0)), getString(R.string.api_key));
-        listCall.enqueue(new Callback<ReviewList>() {
+        service.listReviews(String.valueOf(getIntent().getIntExtra(KEY_ID, 0)), getString(R.string.api_key))
+                .asObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ReviewList>() {
+                    @Override
+                    public void call(ReviewList reviewList) {
+                        if (reviewList != null)
+                            recyclerView.setAdapter(new ReviewAdapter(ReviewActivity.this, reviewList.reviewList));
+                        recyclerView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        refreshLayout.setRefreshing(false);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
+        /*listCall.enqueue(new Callback<ReviewList>() {
             @Override
             public void onResponse(Call<ReviewList> call, Response<ReviewList> response) {
                 ReviewList reviewList = response.body();
@@ -66,7 +89,7 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
             public void onFailure(Call<ReviewList> call, Throwable t) {
                 t.printStackTrace();
             }
-        });
+        });*/
     }
 
     @Override

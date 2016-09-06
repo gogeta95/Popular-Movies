@@ -32,11 +32,12 @@ import java.util.Locale;
 
 import portfolio.saurabh.popularmovies.retrofit.MovieList;
 import portfolio.saurabh.popularmovies.retrofit.MovieService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 
 public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -121,33 +122,59 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
             }
         }).create();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(UriBuilder.BASE).addConverterFactory(GsonConverterFactory.create(gson)).build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(UriBuilder.BASE)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
         MovieService service = retrofit.create(MovieService.class);
-        Call<MovieList> listCall = service.listMovies(getArguments().getString(KEY_TITLE), getString(R.string.api_key));
-        listCall.enqueue(new Callback<MovieList>() {
+        service.listMovies(getArguments().getString(KEY_TITLE), getString(R.string.api_key))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<MovieList>() {
+                    @Override
+                    public void call(MovieList movieList) {
+                        handleResponse(movieList);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                        handleError();
+                    }
+                });
+        /*listCall.enqueue(new Callback<MovieList>() {
             @Override
             public void onResponse(Call<MovieList> call, Response<MovieList> response) {
-                adapter = new RecyclerAdapter(getContext(), response.body());
-                if (recyclerView.getAdapter() != null) {
-                    recyclerView.swapAdapter(adapter, false);
-                } else {
-                    recyclerView.setAdapter(adapter);
-                }
-                refreshLayout.setRefreshing(false);
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+               handleResponse(response);
             }
 
             @Override
             public void onFailure(Call<MovieList> call, Throwable t) {
                 t.printStackTrace();
-                Snackbar.make(recyclerView, getString(R.string.connection_error), Snackbar.LENGTH_SHORT).setAction("Try again", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getData();
-                    }
-                }).show();
+                handleError();
             }
-        });
+        });*/
+    }
+
+    private void handleError() {
+        Snackbar.make(recyclerView, getString(R.string.connection_error), Snackbar.LENGTH_SHORT).setAction("Try again", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getData();
+            }
+        }).show();
+    }
+
+    private void handleResponse(MovieList movieList) {
+        adapter = new RecyclerAdapter(getContext(), movieList);
+        if (recyclerView.getAdapter() != null) {
+            recyclerView.swapAdapter(adapter, false);
+        } else {
+            recyclerView.setAdapter(adapter);
+        }
+        refreshLayout.setRefreshing(false);
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 }

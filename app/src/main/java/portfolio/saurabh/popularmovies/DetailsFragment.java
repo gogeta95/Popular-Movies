@@ -40,11 +40,12 @@ import portfolio.saurabh.popularmovies.database.FavoritesDataSource;
 import portfolio.saurabh.popularmovies.retrofit.MovieService;
 import portfolio.saurabh.popularmovies.retrofit.TrailerList;
 import portfolio.saurabh.popularmovies.util.MaterialColorMapUtils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 
 public class DetailsFragment extends Fragment {
@@ -181,10 +182,34 @@ public class DetailsFragment extends Fragment {
         inflater.inflate(R.menu.share_menu, menu);
         shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
         //Must start after share Provider has been initialized.
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(UriBuilder.BASE).addConverterFactory(GsonConverterFactory.create()).build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(UriBuilder.BASE)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         MovieService service = retrofit.create(MovieService.class);
-        Call<TrailerList> listCall = service.listTrailers(String.valueOf(movie.id), getString(R.string.api_key));
-        listCall.enqueue(new Callback<TrailerList>() {
+        service.listTrailers(String.valueOf(movie.id), getString(R.string.api_key))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<TrailerList>() {
+                    @Override
+                    public void call(TrailerList list) {
+                        if (!list.trailers.isEmpty()) {
+                            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out " + movie.title + "! https://www.youtube.com/watch?v=" + list.trailers.get(0).getKey());
+                            shareIntent.setType("text/plain");
+                            shareActionProvider.setShareIntent(shareIntent);
+                        }
+                        pager.setAdapter(new TrailerPagerAdapter(getChildFragmentManager(), list.trailers));
+                        indicator.setViewPager(pager);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
+       /* listCall.enqueue(new Callback<TrailerList>() {
             @Override
             public void onResponse(Call<TrailerList> call, Response<TrailerList> response) {
                 TrailerList list = response.body();
@@ -202,6 +227,6 @@ public class DetailsFragment extends Fragment {
             public void onFailure(Call<TrailerList> call, Throwable t) {
                 t.printStackTrace();
             }
-        });
+        });*/
     }
 }
