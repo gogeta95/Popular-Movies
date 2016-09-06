@@ -209,24 +209,5 @@ public class DetailsFragment extends Fragment {
                         throwable.printStackTrace();
                     }
                 });
-       /* listCall.enqueue(new Callback<TrailerList>() {
-            @Override
-            public void onResponse(Call<TrailerList> call, Response<TrailerList> response) {
-                TrailerList list = response.body();
-                if (!list.trailers.isEmpty()) {
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out " + movie.title + "! https://www.youtube.com/watch?v=" + list.trailers.get(0).getKey());
-                    shareIntent.setType("text/plain");
-                    shareActionProvider.setShareIntent(shareIntent);
-                }
-                pager.setAdapter(new TrailerPagerAdapter(getChildFragmentManager(), list.trailers));
-                indicator.setViewPager(pager);
-            }
-
-            @Override
-            public void onFailure(Call<TrailerList> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });*/
     }
 }

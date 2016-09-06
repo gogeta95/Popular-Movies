@@ -74,22 +74,6 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
                         throwable.printStackTrace();
                     }
                 });
-        /*listCall.enqueue(new Callback<ReviewList>() {
-            @Override
-            public void onResponse(Call<ReviewList> call, Response<ReviewList> response) {
-                ReviewList reviewList = response.body();
-                if (reviewList != null)
-                    recyclerView.setAdapter(new ReviewAdapter(ReviewActivity.this, reviewList.reviewList));
-                recyclerView.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.INVISIBLE);
-                refreshLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<ReviewList> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });*/
     }
 
     @Override

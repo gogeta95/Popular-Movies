@@ -143,18 +143,6 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         handleError();
                     }
                 });
-        /*listCall.enqueue(new Callback<MovieList>() {
-            @Override
-            public void onResponse(Call<MovieList> call, Response<MovieList> response) {
-               handleResponse(response);
-            }
-
-            @Override
-            public void onFailure(Call<MovieList> call, Throwable t) {
-                t.printStackTrace();
-                handleError();
-            }
-        });*/
     }
 
     private void handleError() {
