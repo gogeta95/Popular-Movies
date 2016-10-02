@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.listfragment;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,33 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-
-import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
+import portfolio.saurabh.popularmovies.R;
+import portfolio.saurabh.popularmovies.RecyclerAdapter;
 import portfolio.saurabh.popularmovies.retrofit.MovieList;
-import portfolio.saurabh.popularmovies.retrofit.MovieService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ListFragmentContract.View {
     public static final String KEY_DATA = "DATA";
     public static final String KEY_TITLE = "title";
+    private static ListFragmentContract.Presenter presenter;
     //    List<MovieData> movieDataList;
     MovieList movieList;
     RecyclerView recyclerView;
@@ -78,6 +62,13 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         setHasOptionsMenu(true);
         refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.progress_colors));
         progressBar = (ProgressBar) layout.findViewById(R.id.progressBar);
+        if (presenter == null) {
+            presenter = new ListFragmentPresenter(getContext());
+        }
+        presenter.setView(this);
+        if (getArguments().getString(KEY_TITLE) != null) {
+            presenter.setTitle(getArguments().getString(KEY_TITLE));
+        }
         if (savedInstanceState != null && savedInstanceState.getParcelableArrayList(KEY_DATA) != null) {
             movieList.movies = savedInstanceState.getParcelableArrayList(KEY_DATA);
             progressBar.setVisibility(View.GONE);
@@ -88,7 +79,9 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 recyclerView.setAdapter(adapter);
             }
         } else {
-            getData();
+            if (presenter != null) {
+                presenter.refresh();
+            }
         }
         return layout;
     }
@@ -103,51 +96,45 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        getData();
+        if (presenter != null) {
+            presenter.refresh();
+        }
     }
 
-    public void getData() {
+    @Override
+    public void showList(MovieList movieList) {
+        adapter = new RecyclerAdapter(getContext(), movieList);
+        if (recyclerView.getAdapter() != null) {
+            recyclerView.swapAdapter(adapter, false);
+        } else {
+            recyclerView.setAdapter(adapter);
+        }
+        refreshLayout.setRefreshing(false);
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showErrorInSnackbar(String message) {
+        Snackbar.make(recyclerView, message, Snackbar.LENGTH_SHORT).setAction("Try again", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRefresh();
+            }
+        }).show();
+    }
+
+    @Override
+    public void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.INVISIBLE);
-        Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    }
 
-            @Override
-            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                try {
-                    return format.parse(json.getAsString());
-                } catch (ParseException e) {
-                    return null;
-                }
-            }
-        }).create();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(UriBuilder.BASE).addConverterFactory(GsonConverterFactory.create(gson)).build();
-        MovieService service = retrofit.create(MovieService.class);
-        Call<MovieList> listCall = service.listMovies(getArguments().getString(KEY_TITLE), getString(R.string.api_key));
-        listCall.enqueue(new Callback<MovieList>() {
-            @Override
-            public void onResponse(Call<MovieList> call, Response<MovieList> response) {
-                adapter = new RecyclerAdapter(getContext(), response.body());
-                if (recyclerView.getAdapter() != null) {
-                    recyclerView.swapAdapter(adapter, false);
-                } else {
-                    recyclerView.setAdapter(adapter);
-                }
-                refreshLayout.setRefreshing(false);
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onFailure(Call<MovieList> call, Throwable t) {
-                t.printStackTrace();
-                Snackbar.make(recyclerView, getString(R.string.connection_error), Snackbar.LENGTH_SHORT).setAction("Try again", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getData();
-                    }
-                }).show();
-            }
-        });
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (presenter!=null)
+            presenter.setView(null);
+        presenter=null;
     }
 }
