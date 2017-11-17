@@ -1,54 +1,38 @@
 package portfolio.saurabh.popularmovies.database;
 
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+
+import portfolio.saurabh.popularmovies.data.Movie;
+import portfolio.saurabh.popularmovies.data.MovieDao;
+import portfolio.saurabh.popularmovies.data.ReviewData;
+import portfolio.saurabh.popularmovies.data.ReviewDataDao;
+import portfolio.saurabh.popularmovies.data.Trailer;
+import portfolio.saurabh.popularmovies.data.TrailerDao;
 
 
-public class MyDatabaseHelper extends SQLiteOpenHelper {
-    static final String TABLE_FAVORITES = "favorites";
-    static final String COLUMN_ID = "_id";
-    static final String COLUMN_TITLE = "title";
-    static final String COLUMN_POSTER = "posterurl";
-    static final String COLUMN_PLOT = "plot";
-    static final String COLUMN_RATING = "user_rating";
-    static final String COLUMN_RELEASE = "release_date";
-    static final String COLUMN_BACKDROP = "backdrop";
-    static final int DATABASE_VERSION = 1;
-    static final String DATABASE_NAME = "Movies.db";
-    static final String DATABASE_CREATE = "create table "
-            + TABLE_FAVORITES + "(" +
-            COLUMN_ID + " integer primary key, "
-            + COLUMN_TITLE + " text not null, "
-            + COLUMN_POSTER + " text not null, "
-            + COLUMN_PLOT + " text not null, "
-            + COLUMN_RATING + " real not null, "
-            + COLUMN_RELEASE + " integer not null, "
-            + COLUMN_BACKDROP + " text not null);";
-    private static MyDatabaseHelper mInstance = null;
+@Database(entities = {Movie.class, Trailer.class, ReviewData.class}, version = 1)
+public abstract class MyDatabaseHelper extends RoomDatabase {
 
-    private MyDatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public static final String TABLE_FAVORITES = "favorites";
+
+    private static MyDatabaseHelper INSTANCE = null;
+
+    public static MyDatabaseHelper getDatabase(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE =
+                    Room.databaseBuilder(context.getApplicationContext(), MyDatabaseHelper.class, "Movie.db")
+                            .build();
+        }
+        return INSTANCE;
     }
 
-    public static MyDatabaseHelper getInstance(Context context) {
-        if (mInstance == null)
-            mInstance = new MyDatabaseHelper(context.getApplicationContext());
-        return mInstance;
-    }
+    public abstract MovieDao movieModel();
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DATABASE_CREATE);
-    }
+    public abstract TrailerDao trailerModel();
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(MyDatabaseHelper.class.getName(),
-                "Upgrading database from version " + oldVersion + " to "
-                        + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
-        onCreate(db);
-    }
+    public abstract ReviewDataDao reviewModel();
+
 }

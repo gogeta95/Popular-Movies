@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import portfolio.saurabh.popularmovies.data.ReviewData;
+
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHolder> {
     Context context;

@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies.retrofit;
+package portfolio.saurabh.popularmovies.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-
-import portfolio.saurabh.popularmovies.Movie;
 
 /**
  * Created by Saurabh on 01-Mar-16.

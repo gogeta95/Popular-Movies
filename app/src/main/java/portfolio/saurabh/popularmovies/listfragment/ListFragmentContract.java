@@ -1,6 +1,6 @@
 package portfolio.saurabh.popularmovies.listfragment;
 
-import portfolio.saurabh.popularmovies.retrofit.MovieList;
+import portfolio.saurabh.popularmovies.data.MovieList;
 
 /**
  * Created by saurabh on 3/10/16.

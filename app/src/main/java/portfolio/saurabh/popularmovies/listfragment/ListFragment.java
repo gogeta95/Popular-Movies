@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.RecyclerAdapter;
-import portfolio.saurabh.popularmovies.retrofit.MovieList;
+import portfolio.saurabh.popularmovies.data.MovieList;
 
 
 public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ListFragmentContract.View {

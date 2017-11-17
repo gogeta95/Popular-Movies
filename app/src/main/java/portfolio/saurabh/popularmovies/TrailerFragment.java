@@ -10,7 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+
 
 /**
  * Created by Saurabh on 12/24/2015.
@@ -32,7 +33,7 @@ public class TrailerFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.trailer_thumb, container, false);
         ImageView image = (ImageView) layout.findViewById(R.id.trailer_thumb);
-        Picasso.with(getActivity()).load("http://img.youtube.com/vi/"+getArguments().getString(KEY)+"/0.jpg").error(R.drawable.placeholder).into(image);
+        Glide.with(getActivity()).load("http://img.youtube.com/vi/"+getArguments().getString(KEY)+"/0.jpg").error(Glide.with(getActivity()).load(R.drawable.placeholder)).into(image);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

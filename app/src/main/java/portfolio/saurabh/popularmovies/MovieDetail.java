@@ -13,6 +13,8 @@ import android.view.Window;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
+import portfolio.saurabh.popularmovies.data.Movie;
+
 public class MovieDetail extends AppCompatActivity {
     public static final String TAG = "MovieDetail";
     public static final String KEY_MOVIE = "MOVIE";

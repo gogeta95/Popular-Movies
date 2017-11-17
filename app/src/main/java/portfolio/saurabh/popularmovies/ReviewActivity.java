@@ -10,8 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import portfolio.saurabh.popularmovies.retrofit.MovieService;
-import portfolio.saurabh.popularmovies.retrofit.ReviewList;
+import portfolio.saurabh.popularmovies.data.MovieService;
+import portfolio.saurabh.popularmovies.data.ReviewList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

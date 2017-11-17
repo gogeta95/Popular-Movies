@@ -33,13 +33,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="portfolio.saurabh.popularmovies.MovieDetail" />
         </activity>
-
-        <provider
-            android:name=".database.MyContentProvider"
-            android:authorities="portfolio.saurabh.popularmovies.provider"
-            android:enabled="true"
-            android:exported="false"
-            android:syncable="true" />
     </application>
 
 </manifest>

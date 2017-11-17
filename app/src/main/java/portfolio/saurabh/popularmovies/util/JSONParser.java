@@ -11,8 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import portfolio.saurabh.popularmovies.Movie;
-import portfolio.saurabh.popularmovies.ReviewData;
+import portfolio.saurabh.popularmovies.data.Movie;
+import portfolio.saurabh.popularmovies.data.ReviewData;
 
 
 public class JSONParser {

@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.List;
 
+import portfolio.saurabh.popularmovies.data.Trailer;
+
 
 public class TrailerPagerAdapter extends FragmentPagerAdapter {
     public static final String TAG = TrailerFragment.class.getSimpleName();

@@ -1,13 +1,17 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.data;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Saurabh on 12/25/2015.
  */
+@Entity
 public class ReviewData implements Parcelable {
     public static final Creator<ReviewData> CREATOR = new Creator<ReviewData>() {
         @Override
@@ -25,7 +29,7 @@ public class ReviewData implements Parcelable {
     @SerializedName("content")
     public String review;
     @SerializedName("url")
-    public String url;
+    public @PrimaryKey @NonNull String url;
 
     protected ReviewData(Parcel in) {
         user = in.readString();

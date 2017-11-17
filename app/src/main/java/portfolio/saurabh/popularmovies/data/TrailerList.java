@@ -1,10 +1,8 @@
-package portfolio.saurabh.popularmovies.retrofit;
+package portfolio.saurabh.popularmovies.data;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-
-import portfolio.saurabh.popularmovies.Trailer;
 
 /**
  * Created by Saurabh on 02-Mar-16.

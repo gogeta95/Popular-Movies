@@ -1,5 +1,8 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.data;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,9 +10,13 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
+
 /**
  * Created by Saurabh on 01-Mar-16.
  */
+@Entity(tableName = MyDatabaseHelper.TABLE_FAVORITES)
+@TypeConverters(DateConverter.class)
 public class Movie implements Parcelable {
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -36,7 +43,7 @@ public class Movie implements Parcelable {
     @SerializedName("backdrop_path")
     public String backdrop;
     @SerializedName("id")
-    public int id;
+    public @PrimaryKey int id;
 
     public Movie(String title, String posterurl, String plot, double user_rating, Date release_date, String backdrop, int id) {
         this.title = title;

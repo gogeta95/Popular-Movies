@@ -1,22 +1,21 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.data;
+
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Saurabh on 01-Mar-16.
  */
+
+@Entity
 public class Trailer {
-    public String id;
+    public @PrimaryKey @NonNull String id;
     public String key;
     public String site;
     public String type;
 
     public Trailer() {
-    }
-
-    public Trailer(String id, String key, String site, String type) {
-        this.id = id;
-        this.key = key;
-        this.site = site;
-        this.type = type;
     }
 
     public String getId() {

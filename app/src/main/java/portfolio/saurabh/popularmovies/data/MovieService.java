@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies.retrofit;
+package portfolio.saurabh.popularmovies.data;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

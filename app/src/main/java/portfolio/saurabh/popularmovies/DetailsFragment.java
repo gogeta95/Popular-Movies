@@ -1,7 +1,7 @@
 package portfolio.saurabh.popularmovies;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -29,16 +29,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.widget.IconTextView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import me.relex.circleindicator.CircleIndicator;
-import portfolio.saurabh.popularmovies.database.FavoritesDataSource;
-import portfolio.saurabh.popularmovies.retrofit.MovieService;
-import portfolio.saurabh.popularmovies.retrofit.TrailerList;
+import portfolio.saurabh.popularmovies.data.Movie;
+import portfolio.saurabh.popularmovies.data.MovieDao;
+import portfolio.saurabh.popularmovies.data.MovieService;
+import portfolio.saurabh.popularmovies.data.TrailerList;
+import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.util.MaterialColorMapUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,9 +62,9 @@ public class DetailsFragment extends Fragment {
     Movie movie;
     ViewPager pager;
     CircleIndicator indicator;
-    FavoritesDataSource dataSource;
     FloatingActionButton fab;
     ShareActionProvider shareActionProvider;
+    MovieDao movieDao;
 
     public static DetailsFragment getInstance(Parcelable movie) {
         DetailsFragment detailsFragment = new DetailsFragment();
@@ -65,23 +74,28 @@ public class DetailsFragment extends Fragment {
         return detailsFragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        movieDao = MyDatabaseHelper.getDatabase(getContext()).movieModel();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View layout = inflater.inflate(R.layout.movie_detail_fragment, container, false);
 //        super.onCreate(savedInstanceState);
-        dataSource = new FavoritesDataSource(getActivity());
-        dataSource.open(false);
         Iconify.with(new FontAwesomeModule());
         setHasOptionsMenu(true);
         movie = getArguments().getParcelable(KEY_MOVIE);
 //        if (savedInstanceState == null) {
         final ImageView poster = (ImageView) layout.findViewById(R.id.poster);
-        Target target = new Target() {
+        final FragmentActivity mActivity = getActivity();
+        Glide.with(getActivity()).load(RecyclerAdapter.POSTER_BASE_URL + movie.posterurl).error(Glide.with(getActivity()).load(R.drawable.placeholder)).into(new SimpleTarget<Drawable>() {
             @Override
-            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+            public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
                 MaterialColorMapUtils colorMapUtils = new MaterialColorMapUtils(getResources());
-                int primaryColor = MaterialColorMapUtils.colorFromBitmap(bitmap);
+                int primaryColor = MaterialColorMapUtils.colorFromBitmap(((BitmapDrawable) resource).getBitmap());
                 if (primaryColor != 0) {
                     MaterialColorMapUtils.MaterialPalette palette = colorMapUtils.calculatePrimaryAndSecondaryColor(primaryColor);
                     if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
@@ -92,22 +106,9 @@ public class DetailsFragment extends Fragment {
                     }
                 }
 
-                poster.setImageBitmap(bitmap);
-
+                poster.setImageDrawable(resource);
             }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-                poster.setImageDrawable(errorDrawable);
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-            }
-        };
-        poster.setTag(target);
-        final FragmentActivity mActivity = getActivity();
-        Picasso.with(getActivity()).load(RecyclerAdapter.POSTER_BASE_URL + movie.posterurl).error(R.drawable.placeholder).into(target);
+        });
         pager = (ViewPager) layout.findViewById(R.id.pager);
         indicator = (CircleIndicator) layout.findViewById(R.id.indicator);
 //          Log.d("abc3", getActivity().toString());
@@ -118,19 +119,48 @@ public class DetailsFragment extends Fragment {
         final TextView plot = (TextView) layout.findViewById(R.id.plot);
         plot.setText(movie.plot.equals("null") ? "" : movie.plot);
 
-        fab = (FloatingActionButton) layout.findViewById(R.id.fab);
+        fab = layout.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dataSource.isMovieExists(movie.id)) {
-                    fab.setImageResource(R.drawable.ic_favorite_white_48dp);
-                    dataSource.removeMovie(movie.id);
-                    Toast.makeText(getActivity(), "Removed from Favorites.", Toast.LENGTH_LONG).show();
-                } else {
-                    fab.setImageResource(R.drawable.ic_favorite_red_48dp);
-                    dataSource.insertMovie(movie);
-                    Toast.makeText(getActivity(), "Added " + movie.title + " To Favorites!", Toast.LENGTH_LONG).show();
-                }
+
+                Observable.fromCallable(new Callable<Boolean>() {
+                    @Override
+                    public Boolean call() throws Exception {
+                        return movieDao.isMovieExists(movie.id);
+                    }
+                })
+                        .doOnNext(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                if (aBoolean) {
+                                    movieDao.deleteMovie(movie.id);
+                                } else {
+                                    movieDao.insertMovie(movie);
+                                }
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+
+                                if (aBoolean) {
+                                    fab.setImageResource(R.drawable.ic_favorite_white_48dp);
+                                    Toast.makeText(getActivity(), "Removed from Favorites.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    fab.setImageResource(R.drawable.ic_favorite_red_48dp);
+                                    Toast.makeText(getActivity(), "Added " + movie.title + " To Favorites!", Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                throwable.printStackTrace();
+                            }
+                        });
 
             }
         });
@@ -159,19 +189,34 @@ public class DetailsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        dataSource = new FavoritesDataSource(getActivity());
-        dataSource.open(false);
-        if (dataSource.isMovieExists(movie.id)) {
-            fab.setImageResource(R.drawable.ic_favorite_red_48dp);
-        }
+
+        Observable.fromCallable(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return movieDao.isMovieExists(movie.id);
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            fab.setImageResource(R.drawable.ic_favorite_red_48dp);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
         return layout;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (dataSource != null)
-            dataSource.close();
         Log.d("abc", "closed");
     }
 

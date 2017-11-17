@@ -13,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
 
-import portfolio.saurabh.popularmovies.retrofit.MovieList;
+import com.bumptech.glide.Glide;
+
+import portfolio.saurabh.popularmovies.data.Movie;
+import portfolio.saurabh.popularmovies.data.MovieList;
 
 
 public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
@@ -47,7 +49,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
         final Movie movie = movieList.movies.get(position);
         String poster_url = movie.posterurl;
         if (poster_url != null && !(poster_url.isEmpty() || poster_url.equals("null"))) {
-            Picasso.with(context).load(POSTER_BASE_URL + poster_url).placeholder(R.drawable.placeholder).error(R.drawable.placeholder).into(holder.poster);
+            Glide.with(context).load(POSTER_BASE_URL + poster_url).error(Glide.with(context).load(R.drawable.placeholder)).into(holder.poster);
         }
         if (!MainActivity.mIsDualPane) {
             holder.root.setOnClickListener(new View.OnClickListener() {
