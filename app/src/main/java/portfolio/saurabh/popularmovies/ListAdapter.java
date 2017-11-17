@@ -1,9 +1,8 @@
-package portfolio.saurabh.popularmovies.database;
+package portfolio.saurabh.popularmovies;
 
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentActivity;
@@ -14,32 +13,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.bumptech.glide.Glide;
 
-import java.util.Date;
 import java.util.List;
 
-import portfolio.saurabh.popularmovies.DetailsFragment;
-import portfolio.saurabh.popularmovies.MainActivity;
 import portfolio.saurabh.popularmovies.data.Movie;
-import portfolio.saurabh.popularmovies.MovieDetail;
-import portfolio.saurabh.popularmovies.PosterViewHolder;
-import portfolio.saurabh.popularmovies.R;
-import portfolio.saurabh.popularmovies.RecyclerAdapter;
 
 /**
  * Created by Saurabh on 1/2/2016.
  */
-public class CursorAdapter extends RecyclerView.Adapter<PosterViewHolder> {
+public class ListAdapter extends RecyclerView.Adapter<PosterViewHolder> {
 
 
     private List<Movie> movies;
     private Context context;
     private LayoutInflater inflater;
 
-    public CursorAdapter(Context context) {
-        this.context=context;
+    public ListAdapter(Context context) {
+        this.context = context;
         inflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -85,7 +76,7 @@ public class CursorAdapter extends RecyclerView.Adapter<PosterViewHolder> {
 
     @Override
     public int getItemCount() {
-        return movies==null?0:movies.size();
+        return movies == null ? 0 : movies.size();
     }
 
     public void setData(List<Movie> data) {

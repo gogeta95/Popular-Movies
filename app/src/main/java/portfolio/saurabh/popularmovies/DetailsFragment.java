@@ -127,19 +127,11 @@ public class DetailsFragment extends Fragment {
                 Observable.fromCallable(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
-                        return movieDao.isMovieExists(movie.id);
+                        movie.favorite = !movie.favorite;
+                        movieDao.updateMovie(movie);
+                        return movie.favorite;
                     }
                 })
-                        .doOnNext(new Consumer<Boolean>() {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception {
-                                if (aBoolean) {
-                                    movieDao.deleteMovie(movie.id);
-                                } else {
-                                    movieDao.insertMovie(movie);
-                                }
-                            }
-                        })
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<Boolean>() {
@@ -147,11 +139,12 @@ public class DetailsFragment extends Fragment {
                             public void accept(Boolean aBoolean) throws Exception {
 
                                 if (aBoolean) {
-                                    fab.setImageResource(R.drawable.ic_favorite_white_48dp);
-                                    Toast.makeText(getActivity(), "Removed from Favorites.", Toast.LENGTH_LONG).show();
-                                } else {
                                     fab.setImageResource(R.drawable.ic_favorite_red_48dp);
                                     Toast.makeText(getActivity(), "Added " + movie.title + " To Favorites!", Toast.LENGTH_LONG).show();
+
+                                } else {
+                                    fab.setImageResource(R.drawable.ic_favorite_white_48dp);
+                                    Toast.makeText(getActivity(), "Removed from Favorites.", Toast.LENGTH_LONG).show();
                                 }
 
                             }
@@ -181,6 +174,7 @@ public class DetailsFragment extends Fragment {
                 fab.setVisibility(View.VISIBLE);
             }
         }, 250);
+
         layout.findViewById(R.id.reviews).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,27 +184,9 @@ public class DetailsFragment extends Fragment {
             }
         });
 
-        Observable.fromCallable(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return movieDao.isMovieExists(movie.id);
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
-                        if (aBoolean) {
-                            fab.setImageResource(R.drawable.ic_favorite_red_48dp);
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                    }
-                });
+        if (movie.favorite) {
+            fab.setImageResource(R.drawable.ic_favorite_red_48dp);
+        }
         return layout;
     }
 

@@ -16,8 +16,6 @@ import portfolio.saurabh.popularmovies.data.TrailerDao;
 @Database(entities = {Movie.class, Trailer.class, ReviewData.class}, version = 1)
 public abstract class MyDatabaseHelper extends RoomDatabase {
 
-    public static final String TABLE_FAVORITES = "favorites";
-
     private static MyDatabaseHelper INSTANCE = null;
 
     public static MyDatabaseHelper getDatabase(Context context) {

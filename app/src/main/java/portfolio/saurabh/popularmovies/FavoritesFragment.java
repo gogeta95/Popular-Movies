@@ -16,13 +16,12 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import portfolio.saurabh.popularmovies.data.Movie;
-import portfolio.saurabh.popularmovies.database.CursorAdapter;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 
 
 public class FavoritesFragment extends Fragment {
     RecyclerView recyclerView;
-    private CursorAdapter mAdapter;
+    private ListAdapter mAdapter;
     private LiveData<List<Movie>> movieLiveData;
 
 
@@ -39,10 +38,10 @@ public class FavoritesFragment extends Fragment {
         boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         width = isTablet && isLandscape ? (width / 2) : width;
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), width / 140));
-        mAdapter = new CursorAdapter(getContext());
+        mAdapter = new ListAdapter(getContext());
         recyclerView.setAdapter(mAdapter);
 
-        movieLiveData = MyDatabaseHelper.getDatabase(getContext()).movieModel().getMovies();
+        movieLiveData = MyDatabaseHelper.getDatabase(getContext()).movieModel().getAllFavoriteMovies();
         movieLiveData.observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {

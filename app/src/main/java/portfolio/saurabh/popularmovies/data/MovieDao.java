@@ -5,10 +5,9 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
-
-import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 
 /**
  * Created by saurabh on 17/11/17.
@@ -17,15 +16,15 @@ import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 @Dao
 public interface MovieDao {
 
-    @Query("SELECT * FROM "+ MyDatabaseHelper.TABLE_FAVORITES)
-    LiveData<List<Movie>> getMovies();
+    @Query("SELECT * FROM Movie")
+    LiveData<List<Movie>> getAllMovies();
 
-    @Query("SELECT 1 FROM "+ MyDatabaseHelper.TABLE_FAVORITES+" WHERE id = :id")
-    boolean isMovieExists(int id);
+    @Query("SELECT * FROM Movie WHERE favorite = 1")
+    LiveData<List<Movie>> getAllFavoriteMovies();
 
-    @Query("DELETE FROM "+ MyDatabaseHelper.TABLE_FAVORITES+" WHERE id = :id")
-    void deleteMovie(int id);
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateMovie(Movie movie);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMovie(Movie movie);
+    void insertAll(List<Movie> movies);
 }

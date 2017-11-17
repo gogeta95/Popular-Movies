@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3e99ef48bcabd41bdc11ca935db6ab50",
+    "identityHash": "db69e920541726f206892147ab03d7c5",
     "entities": [
       {
-        "tableName": "favorites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT, `posterurl` TEXT, `plot` TEXT, `user_rating` REAL NOT NULL, `release_date` INTEGER, `backdrop` TEXT, `id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "Movie",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT, `posterurl` TEXT, `plot` TEXT, `user_rating` REAL NOT NULL, `release_date` INTEGER, `backdrop` TEXT, `favorite` INTEGER NOT NULL, `id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "title",
@@ -43,6 +43,12 @@
             "columnName": "backdrop",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "favorite",
+            "columnName": "favorite",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "id",
@@ -133,7 +139,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3e99ef48bcabd41bdc11ca935db6ab50\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"db69e920541726f206892147ab03d7c5\")"
     ]
   }
 }

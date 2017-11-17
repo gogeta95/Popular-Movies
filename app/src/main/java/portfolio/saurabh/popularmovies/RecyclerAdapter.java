@@ -8,16 +8,17 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.bumptech.glide.Glide;
 
+import java.util.List;
+
 import portfolio.saurabh.popularmovies.data.Movie;
-import portfolio.saurabh.popularmovies.data.MovieList;
 
 
 public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
@@ -26,17 +27,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     public static final String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w500";
     LayoutInflater inflater;
     Context context;
-    MovieList movieList;
+    List<Movie> movies;
 
-    public RecyclerAdapter(Context context, MovieList movieList) {
+    public RecyclerAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        this.movieList = movieList;
         if (MainActivity.mIsDualPane) {
             ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail, DetailsFragment.getInstance(movieList.movies.get(0)))
+                    .replace(R.id.movie_detail, DetailsFragment.getInstance(movies.get(0)))
                     .commit();
         }
+    }
+
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
+        notifyDataSetChanged();
+        Log.d(TAG, "setMovies: ");
     }
 
     @Override
@@ -46,7 +52,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
 
     @Override
     public void onBindViewHolder(final PosterViewHolder holder, int position) {
-        final Movie movie = movieList.movies.get(position);
+        final Movie movie = movies.get(position);
         String poster_url = movie.posterurl;
         if (poster_url != null && !(poster_url.isEmpty() || poster_url.equals("null"))) {
             Glide.with(context).load(POSTER_BASE_URL + poster_url).error(Glide.with(context).load(R.drawable.placeholder)).into(holder.poster);
@@ -81,7 +87,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
 
     @Override
     public int getItemCount() {
-        return movieList.movies == null ? 0 : movieList.movies.size();
+        return movies == null ? 0 : movies.size();
     }
 
 }

@@ -10,12 +10,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
-
 /**
  * Created by Saurabh on 01-Mar-16.
  */
-@Entity(tableName = MyDatabaseHelper.TABLE_FAVORITES)
+@Entity()
 @TypeConverters(DateConverter.class)
 public class Movie implements Parcelable {
 
@@ -42,8 +40,12 @@ public class Movie implements Parcelable {
     public Date release_date;
     @SerializedName("backdrop_path")
     public String backdrop;
+
+    public boolean favorite;
+
     @SerializedName("id")
-    public @PrimaryKey int id;
+    public @PrimaryKey
+    int id;
 
     public Movie(String title, String posterurl, String plot, double user_rating, Date release_date, String backdrop, int id) {
         this.title = title;
