@@ -5,7 +5,6 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -22,9 +21,10 @@ public interface MovieDao {
     @Query("SELECT * FROM Movie WHERE favorite = 1")
     LiveData<List<Movie>> getAllFavoriteMovies();
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateMovie(Movie movie);
+    @Query("UPDATE Movie SET favorite = :favorite " +
+            "WHERE id=:id")
+    void setFavorite(int id, boolean favorite);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(List<Movie> movies);
 }

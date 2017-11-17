@@ -127,8 +127,8 @@ public class DetailsFragment extends Fragment {
                 Observable.fromCallable(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
+                        movieDao.setFavorite(movie.id, !movie.favorite);
                         movie.favorite = !movie.favorite;
-                        movieDao.updateMovie(movie);
                         return movie.favorite;
                     }
                 })

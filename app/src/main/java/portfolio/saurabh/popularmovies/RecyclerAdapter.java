@@ -8,7 +8,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +41,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
-        Log.d(TAG, "setMovies: ");
     }
 
     @Override

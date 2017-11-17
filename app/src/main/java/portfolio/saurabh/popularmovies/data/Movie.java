@@ -65,6 +65,7 @@ public class Movie implements Parcelable {
         release_date = new Date(in.readLong());
         backdrop = in.readString();
         id = in.readInt();
+        favorite = in.readByte() != 0;
     }
 
     @Override
@@ -76,6 +77,7 @@ public class Movie implements Parcelable {
         dest.writeLong(release_date != null ? release_date.getTime() : 0);
         dest.writeString(backdrop);
         dest.writeInt(id);
+        dest.writeByte((byte) (favorite ? 1 : 0));
     }
 
     @Override
