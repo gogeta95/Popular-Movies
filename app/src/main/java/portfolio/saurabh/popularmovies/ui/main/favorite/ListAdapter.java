@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies.ui.main;
+package portfolio.saurabh.popularmovies.ui.main.favorite;
 
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -21,6 +21,10 @@ import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
 import portfolio.saurabh.popularmovies.ui.detail.MovieDetail;
+import portfolio.saurabh.popularmovies.ui.main.MainActivity;
+import portfolio.saurabh.popularmovies.ui.main.PosterViewHolder;
+
+import static portfolio.saurabh.popularmovies.util.UriBuilder.POSTER_BASE_URL;
 
 /**
  * Created by Saurabh on 1/2/2016.
@@ -32,7 +36,7 @@ public class ListAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     private Context context;
     private LayoutInflater inflater;
 
-    public ListAdapter(Context context) {
+    ListAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.context = context;
@@ -48,7 +52,7 @@ public class ListAdapter extends RecyclerView.Adapter<PosterViewHolder> {
         final Movie movie = movies.get(position);
         String poster_url = movie.posterurl;
         if (!(poster_url.isEmpty() || poster_url.equals("null"))) {
-            Glide.with(context).load(RecyclerAdapter.POSTER_BASE_URL + poster_url).error(Glide.with(context).load(R.drawable.placeholder)).into(holder.poster);
+            Glide.with(context).load(POSTER_BASE_URL + poster_url).error(Glide.with(context).load(R.drawable.placeholder)).into(holder.poster);
         }
         if (!MainActivity.mIsDualPane) {
             holder.root.setOnClickListener(new View.OnClickListener() {

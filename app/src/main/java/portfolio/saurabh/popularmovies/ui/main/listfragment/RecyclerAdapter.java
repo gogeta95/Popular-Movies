@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies.ui.main;
+package portfolio.saurabh.popularmovies.ui.main.listfragment;
 
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -21,17 +21,19 @@ import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
 import portfolio.saurabh.popularmovies.ui.detail.MovieDetail;
+import portfolio.saurabh.popularmovies.ui.main.MainActivity;
+import portfolio.saurabh.popularmovies.ui.main.PosterViewHolder;
+
+import static portfolio.saurabh.popularmovies.util.UriBuilder.POSTER_BASE_URL;
 
 
 public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     public static final String TAG = RecyclerAdapter.class.getName();
-    public static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/w185";
-    public static final String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w500";
-    LayoutInflater inflater;
-    Context context;
-    List<Movie> movies;
+    private LayoutInflater inflater;
+    private Context context;
+    private List<Movie> movies;
 
-    public RecyclerAdapter(Context context) {
+    RecyclerAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         if (MainActivity.mIsDualPane) {
@@ -41,7 +43,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
         }
     }
 
-    public void setMovies(List<Movie> movies) {
+    void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }
@@ -65,7 +67,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
                     Intent intent = new Intent(context, MovieDetail.class);
                     intent.putExtra(MovieDetail.KEY_MOVIE, movie);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        AppBarLayout barLayout = (AppBarLayout) ((AppCompatActivity) context).findViewById(R.id.actionbar);
+                        AppBarLayout barLayout = ((AppCompatActivity) context).findViewById(R.id.actionbar);
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((AppCompatActivity) context, Pair.create((View) holder.poster, "poster"), Pair.create((View) barLayout, "actionbar"));
                         context.startActivity(intent, options.toBundle());
                     } else

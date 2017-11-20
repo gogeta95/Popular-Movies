@@ -23,7 +23,6 @@ import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
-import portfolio.saurabh.popularmovies.ui.main.ListAdapter;
 import portfolio.saurabh.popularmovies.ui.main.MainActivity;
 
 

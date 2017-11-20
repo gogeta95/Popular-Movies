@@ -26,7 +26,6 @@ import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
-import portfolio.saurabh.popularmovies.ui.main.RecyclerAdapter;
 
 
 public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ListFragmentContract.View {
@@ -82,7 +81,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         progressBar = layout.findViewById(R.id.progressBar);
 
         presenter.setView(this);
-        if (getArguments().getString(KEY_TITLE) != null) {
+        if (getArguments() != null && getArguments().getString(KEY_TITLE) != null) {
             presenter.setTitle(getArguments().getString(KEY_TITLE));
         }
         adapter = new RecyclerAdapter(getContext());
@@ -93,7 +92,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
                 adapter.setMovies(movies);
-                progressBar.setVisibility(movies.isEmpty() ? View.VISIBLE : View.GONE);
+                progressBar.setVisibility(movies == null || movies.isEmpty() ? View.VISIBLE : View.GONE);
             }
         });
 
@@ -102,7 +101,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-            presenter.refresh();
+        presenter.refresh();
     }
 
 

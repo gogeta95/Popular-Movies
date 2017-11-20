@@ -54,13 +54,14 @@ import portfolio.saurabh.popularmovies.data.TrailerList;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
 import portfolio.saurabh.popularmovies.ui.detail.trailer.TrailerPagerAdapter;
-import portfolio.saurabh.popularmovies.ui.main.RecyclerAdapter;
 import portfolio.saurabh.popularmovies.ui.review.ReviewActivity;
 import portfolio.saurabh.popularmovies.util.DateConvert;
 import portfolio.saurabh.popularmovies.util.MaterialColorMapUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static portfolio.saurabh.popularmovies.util.UriBuilder.POSTER_BASE_URL;
 
 
 public class DetailsFragment extends Fragment {
@@ -106,7 +107,7 @@ public class DetailsFragment extends Fragment {
 //        if (savedInstanceState == null) {
         final ImageView poster = (ImageView) layout.findViewById(R.id.poster);
         final FragmentActivity mActivity = getActivity();
-        Glide.with(getActivity()).load(RecyclerAdapter.POSTER_BASE_URL + movie.posterurl).error(Glide.with(getActivity()).load(R.drawable.placeholder)).into(new SimpleTarget<Drawable>() {
+        Glide.with(getActivity()).load(POSTER_BASE_URL + movie.posterurl).error(Glide.with(getActivity()).load(R.drawable.placeholder)).into(new SimpleTarget<Drawable>() {
             @Override
             public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
                 MaterialColorMapUtils colorMapUtils = new MaterialColorMapUtils(getResources());
