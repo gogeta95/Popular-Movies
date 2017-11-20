@@ -15,6 +15,8 @@ public class Trailer {
     public String site;
     public String type;
 
+    public int movieId;
+
     public Trailer() {
     }
 

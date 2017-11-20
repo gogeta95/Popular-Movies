@@ -11,21 +11,24 @@ import portfolio.saurabh.popularmovies.data.Trailer;
 
 public class TrailerPagerAdapter extends FragmentPagerAdapter {
     public static final String TAG = TrailerFragment.class.getSimpleName();
-    List<Trailer> thumbs;
+    List<Trailer> trailers;
 
-    public TrailerPagerAdapter(FragmentManager fm, List<Trailer> thumbs) {
+    public TrailerPagerAdapter(FragmentManager fm) {
         super(fm);
-        this.thumbs = thumbs;
+    }
+
+    public void setTrailers(List<Trailer> trailers) {
+        this.trailers = trailers;
+        notifyDataSetChanged();
     }
 
     @Override
     public Fragment getItem(int position) {
-//        Log.d(TAG, thumbs.get(position));
-        return TrailerFragment.getInstance(thumbs.get(position).key);
+        return TrailerFragment.getInstance(trailers.get(position).key);
     }
 
     @Override
     public int getCount() {
-        return thumbs.size();
+        return trailers == null ? 0 : trailers.size();
     }
 }

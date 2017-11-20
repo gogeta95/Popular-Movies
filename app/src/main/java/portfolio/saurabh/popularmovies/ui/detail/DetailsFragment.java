@@ -1,5 +1,7 @@
 package portfolio.saurabh.popularmovies.ui.detail;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -16,7 +18,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,10 +37,12 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -48,8 +51,8 @@ import me.relex.circleindicator.CircleIndicator;
 import portfolio.saurabh.popularmovies.MovieApplication;
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
-import portfolio.saurabh.popularmovies.data.MovieDao;
 import portfolio.saurabh.popularmovies.data.MovieService;
+import portfolio.saurabh.popularmovies.data.Trailer;
 import portfolio.saurabh.popularmovies.data.TrailerList;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
@@ -70,17 +73,17 @@ import static portfolio.saurabh.popularmovies.util.UriBuilder.POSTER_BASE_URL;
 public class DetailsFragment extends Fragment {
     public static final String TAG = "MovieDetail";
     public static final String KEY_MOVIE = "MOVIE";
-    Movie movie;
-    ViewPager pager;
-    CircleIndicator indicator;
-    FloatingActionButton fab;
-    ShareActionProvider shareActionProvider;
-    MovieDao movieDao;
-
     @Inject
     MyDatabaseHelper myDatabaseHelper;
     @Inject
     MovieService service;
+    private Movie movie;
+    private ViewPager pager;
+    private CircleIndicator indicator;
+    private FloatingActionButton fab;
+    private ShareActionProvider shareActionProvider;
+    private LiveData<List<Trailer>> trailerLiveData;
+    private TrailerPagerAdapter pagerAdapter;
 
     public static DetailsFragment getInstance(Parcelable movie) {
         DetailsFragment detailsFragment = new DetailsFragment();
@@ -137,6 +140,8 @@ public class DetailsFragment extends Fragment {
         });
         pager = layout.findViewById(R.id.pager);
         indicator = layout.findViewById(R.id.indicator);
+
+
 //          Log.d("abc3", getActivity().toString());
         final TextView date = layout.findViewById(R.id.date);
         date.setText("In theatres " + DateConvert.convert(movie.release_date));
@@ -153,7 +158,7 @@ public class DetailsFragment extends Fragment {
                 Observable.fromCallable(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
-                        movieDao.setFavorite(movie.id, !movie.favorite);
+                        myDatabaseHelper.movieModel().setFavorite(movie.id, !movie.favorite);
                         movie.favorite = !movie.favorite;
                         return movie.favorite;
                     }
@@ -215,15 +220,39 @@ public class DetailsFragment extends Fragment {
         }
 
         getComponent().inject(this);
-        movieDao = myDatabaseHelper.movieModel();
+
+
+        pagerAdapter = new TrailerPagerAdapter(getChildFragmentManager());
+        pager.setAdapter(pagerAdapter);
+        indicator.setViewPager(pager);
 
         return layout;
+    }
+
+    private void observeTrailers() {
+        trailerLiveData = myDatabaseHelper.trailerModel().getTrailersForMovie(movie.id);
+
+        trailerLiveData.observe(this, new Observer<List<Trailer>>() {
+            @Override
+            public void onChanged(@Nullable List<Trailer> trailers) {
+
+                if (trailers != null && !trailers.isEmpty()) {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out " + movie.title + "! https://www.youtube.com/watch?v=" + trailers.get(0).getKey());
+                    shareIntent.setType("text/plain");
+                    shareActionProvider.setShareIntent(shareIntent);
+                }
+
+                pagerAdapter.setTrailers(trailers);
+            }
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d("abc", "closed");
+        if (trailerLiveData != null)
+            trailerLiveData.removeObservers(this);
     }
 
     @Override
@@ -232,19 +261,29 @@ public class DetailsFragment extends Fragment {
         inflater.inflate(R.menu.share_menu, menu);
         shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
         //Must start after share Provider has been initialized.
+        observeTrailers();
+
         Call<TrailerList> listCall = service.listTrailers(String.valueOf(movie.id), getString(R.string.api_key));
         listCall.enqueue(new Callback<TrailerList>() {
             @Override
             public void onResponse(Call<TrailerList> call, Response<TrailerList> response) {
-                TrailerList list = response.body();
-                if (!list.trailers.isEmpty()) {
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out " + movie.title + "! https://www.youtube.com/watch?v=" + list.trailers.get(0).getKey());
-                    shareIntent.setType("text/plain");
-                    shareActionProvider.setShareIntent(shareIntent);
+                final TrailerList list = response.body();
+                if (list != null && list.trailers != null && !list.trailers.isEmpty()) {
+                    Completable.fromCallable(new Callable<Object>() {
+                        @Override
+                        public Object call() throws Exception {
+                            for (Trailer trailer : list.trailers) {
+                                trailer.movieId = movie.id;
+                            }
+
+                            myDatabaseHelper.trailerModel().insertAll(list.trailers);
+                            return null;
+                        }
+                    })
+                            .subscribeOn(Schedulers.io())
+                            .subscribe();
                 }
-                pager.setAdapter(new TrailerPagerAdapter(getChildFragmentManager(), list.trailers));
-                indicator.setViewPager(pager);
+
             }
 
             @Override
