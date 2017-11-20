@@ -1,5 +1,7 @@
 package portfolio.saurabh.popularmovies.listfragment;
 
+import android.support.annotation.StringRes;
+
 /**
  * Created by saurabh on 3/10/16.
  */
@@ -7,8 +9,7 @@ package portfolio.saurabh.popularmovies.listfragment;
 public class ListFragmentContract {
     public interface View {
 
-        void showErrorInSnackbar(String message);
-
+        void showErrorInSnackbar(@StringRes int resId);
     }
 
     public interface Presenter {

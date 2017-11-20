@@ -15,15 +15,23 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
+import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
 
 
 public class FavoritesFragment extends Fragment {
     RecyclerView recyclerView;
+    @Inject
+    MyDatabaseHelper myDatabaseHelper;
     private ListAdapter mAdapter;
     private LiveData<List<Movie>> movieLiveData;
 
+    ApplicationComponent getAppComponent() {
+        return ((MovieApplication) getActivity().getApplicationContext()).getComponent();
+    }
 
     @Nullable
     @Override
@@ -40,8 +48,8 @@ public class FavoritesFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), width / 140));
         mAdapter = new ListAdapter(getContext());
         recyclerView.setAdapter(mAdapter);
-
-        movieLiveData = MyDatabaseHelper.getDatabase(getContext()).movieModel().getAllFavoriteMovies();
+        getAppComponent().inject(this);
+        movieLiveData = myDatabaseHelper.movieModel().getAllFavoriteMovies();
         movieLiveData.observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {

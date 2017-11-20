@@ -18,7 +18,7 @@ public interface MovieDao {
     @Query("SELECT * FROM Movie")
     LiveData<List<Movie>> getAllMovies();
 
-    @Query("SELECT * FROM Movie WHERE favorite = 1")
+    @Query("SELECT * FROM Movie WHERE favorite = 'true'")
     LiveData<List<Movie>> getAllFavoriteMovies();
 
     @Query("UPDATE Movie SET favorite = :favorite " +

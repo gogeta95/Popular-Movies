@@ -38,6 +38,8 @@ import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.concurrent.Callable;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -48,12 +50,11 @@ import portfolio.saurabh.popularmovies.data.MovieDao;
 import portfolio.saurabh.popularmovies.data.MovieService;
 import portfolio.saurabh.popularmovies.data.TrailerList;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
+import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
 import portfolio.saurabh.popularmovies.util.MaterialColorMapUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class DetailsFragment extends Fragment {
@@ -66,6 +67,11 @@ public class DetailsFragment extends Fragment {
     ShareActionProvider shareActionProvider;
     MovieDao movieDao;
 
+    @Inject
+    MyDatabaseHelper myDatabaseHelper;
+    @Inject
+    MovieService service;
+
     public static DetailsFragment getInstance(Parcelable movie) {
         DetailsFragment detailsFragment = new DetailsFragment();
         Bundle bundle = new Bundle();
@@ -74,10 +80,13 @@ public class DetailsFragment extends Fragment {
         return detailsFragment;
     }
 
+    ApplicationComponent getAppComponent() {
+        return ((MovieApplication) getActivity().getApplicationContext()).getComponent();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        movieDao = MyDatabaseHelper.getDatabase(getContext()).movieModel();
     }
 
     @Nullable
@@ -187,6 +196,10 @@ public class DetailsFragment extends Fragment {
         if (movie.favorite) {
             fab.setImageResource(R.drawable.ic_favorite_red_48dp);
         }
+
+        getAppComponent().inject(this);
+        movieDao = myDatabaseHelper.movieModel();
+
         return layout;
     }
 
@@ -202,8 +215,6 @@ public class DetailsFragment extends Fragment {
         inflater.inflate(R.menu.share_menu, menu);
         shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
         //Must start after share Provider has been initialized.
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(UriBuilder.BASE).addConverterFactory(GsonConverterFactory.create()).build();
-        MovieService service = retrofit.create(MovieService.class);
         Call<TrailerList> listCall = service.listTrailers(String.valueOf(movie.id), getString(R.string.api_key));
         listCall.enqueue(new Callback<TrailerList>() {
             @Override

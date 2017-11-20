@@ -14,44 +14,45 @@ import portfolio.saurabh.popularmovies.data.ReviewData;
 
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHolder> {
-    Context context;
-    LayoutInflater inflater;
-    List<ReviewData> reviewDataList;
+    private Context context;
+    private LayoutInflater inflater;
+    private List<ReviewData> reviewDataList;
 
-    public ReviewAdapter(Context context,List<ReviewData>  reviewDataList){
-        this.context=context;
-        inflater=LayoutInflater.from(context);
-        this.reviewDataList=reviewDataList;
+    ReviewAdapter(Context context, List<ReviewData> reviewDataList) {
+        this.context = context;
+        inflater = LayoutInflater.from(context);
+        this.reviewDataList = reviewDataList;
     }
 
     @Override
     public ReviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ReviewHolder(inflater.inflate(R.layout.review_item,parent,false));
+        return new ReviewHolder(inflater.inflate(R.layout.review_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ReviewHolder holder, int position) {
-        ReviewData review= reviewDataList.get(position);
+        ReviewData review = reviewDataList.get(position);
         holder.content.setText(review.review);
         holder.user.setText(review.user);
-        int color=position%2==0?context.getResources().getColor(R.color.blue):context.getResources().getColor(R.color.green);
+        int color = position % 2 == 0 ? context.getResources().getColor(R.color.blue) : context.getResources().getColor(R.color.green);
         holder.root.setCardBackgroundColor(color);
     }
 
     @Override
     public int getItemCount() {
-        return reviewDataList==null?0:reviewDataList.size();
+        return reviewDataList == null ? 0 : reviewDataList.size();
     }
 
-    public class ReviewHolder extends RecyclerView.ViewHolder{
+    class ReviewHolder extends RecyclerView.ViewHolder {
         CardView root;
         TextView user;
         TextView content;
-        public ReviewHolder(View itemView) {
+
+        ReviewHolder(View itemView) {
             super(itemView);
-            root= (CardView) itemView.findViewById(R.id.root);
-            user= (TextView) itemView.findViewById(R.id.user);
-            content= (TextView) itemView.findViewById(R.id.content);
+            root = itemView.findViewById(R.id.root);
+            user = itemView.findViewById(R.id.user);
+            content = itemView.findViewById(R.id.content);
         }
     }
 }

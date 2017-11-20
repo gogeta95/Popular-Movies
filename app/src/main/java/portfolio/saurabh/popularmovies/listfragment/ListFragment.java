@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,25 +19,30 @@ import android.widget.ProgressBar;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import portfolio.saurabh.popularmovies.MovieApplication;
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.RecyclerAdapter;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
+import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
 
 
 public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ListFragmentContract.View {
     public static final String KEY_DATA = "DATA";
     public static final String KEY_TITLE = "title";
-    private static ListFragmentContract.Presenter presenter;
+
     RecyclerView recyclerView;
     RecyclerAdapter adapter;
     ProgressBar progressBar;
     SwipeRefreshLayout refreshLayout;
-    private LiveData<List<Movie>> movieLiveData;
 
-    public ListFragment() {
-
-    }
+    LiveData<List<Movie>> movieLiveData;
+    @Inject
+    MyDatabaseHelper myDatabaseHelper;
+    @Inject
+    ListFragmentContract.Presenter presenter;
 
     public static ListFragment getInstance(String title) {
         ListFragment fragment = new ListFragment();
@@ -46,10 +52,15 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return fragment;
     }
 
+    ApplicationComponent getAppComponent() {
+        return ((MovieApplication) getActivity().getApplicationContext()).getComponent();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        movieLiveData = MyDatabaseHelper.getDatabase(getContext()).movieModel().getAllMovies();
+
+        getAppComponent().inject(this);
     }
 
     @Nullable
@@ -69,9 +80,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         setHasOptionsMenu(true);
         refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.progress_colors));
         progressBar = layout.findViewById(R.id.progressBar);
-        if (presenter == null) {
-            presenter = new ListFragmentPresenter(getContext());
-        }
+
         presenter.setView(this);
         if (getArguments().getString(KEY_TITLE) != null) {
             presenter.setTitle(getArguments().getString(KEY_TITLE));
@@ -79,6 +88,7 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         adapter = new RecyclerAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
+        movieLiveData = myDatabaseHelper.movieModel().getAllMovies();
         movieLiveData.observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
@@ -92,15 +102,13 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        if (presenter != null) {
             presenter.refresh();
-        }
     }
 
 
     @Override
-    public void showErrorInSnackbar(String message) {
-        Snackbar.make(recyclerView, message, Snackbar.LENGTH_SHORT).setAction("Try again", new View.OnClickListener() {
+    public void showErrorInSnackbar(@StringRes int resId) {
+        Snackbar.make(recyclerView, getString(resId), Snackbar.LENGTH_SHORT).setAction("Try again", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onRefresh();
@@ -109,10 +117,9 @@ public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         if (presenter != null)
             presenter.setView(null);
-        presenter = null;
     }
 }
