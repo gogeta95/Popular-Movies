@@ -27,8 +27,6 @@ import portfolio.saurabh.popularmovies.BuildConfig;
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.MovieService;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
-import portfolio.saurabh.popularmovies.ui.main.listfragment.ListFragmentContract;
-import portfolio.saurabh.popularmovies.ui.main.listfragment.ListFragmentPresenter;
 import portfolio.saurabh.popularmovies.util.UriBuilder;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -102,10 +100,5 @@ public class ApplicationModule {
     @Singleton
     String provideApikey() {
         return application.getString(R.string.api_key);
-    }
-
-    @Provides
-    ListFragmentContract.Presenter provideListPresenter(ListFragmentPresenter listFragmentPresenter) {
-        return listFragmentPresenter;
     }
 }

@@ -14,6 +14,7 @@ import portfolio.saurabh.popularmovies.data.MovieDao;
 import portfolio.saurabh.popularmovies.data.MovieList;
 import portfolio.saurabh.popularmovies.data.MovieService;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
+import portfolio.saurabh.popularmovies.di.UIScope;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +23,7 @@ import retrofit2.Response;
  * Created by saurabh on 3/10/16.
  */
 
+@UIScope
 public class ListFragmentPresenter implements ListFragmentContract.Presenter {
     private static final String TAG = ListFragmentPresenter.class.getSimpleName();
     private final MovieService service;
