@@ -16,5 +16,5 @@ public interface MovieService {
     Call<TrailerList> listTrailers(@Path("movie") String movie, @Query("api_key") String key);
 
     @GET("/3/movie/{id}/reviews")
-    Call<ReviewList> listReviews(@Path("id") String movie, @Query("api_key") String key);
+    Call<ReviewList> listReviews(@Path("id") int movieId, @Query("api_key") String key);
 }

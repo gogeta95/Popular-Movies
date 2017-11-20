@@ -17,8 +17,11 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
+import portfolio.saurabh.popularmovies.di.UIScope;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
 import portfolio.saurabh.popularmovies.ui.detail.MovieDetail;
 import portfolio.saurabh.popularmovies.ui.main.MainActivity;
@@ -29,6 +32,7 @@ import static portfolio.saurabh.popularmovies.util.UriBuilder.POSTER_BASE_URL;
 /**
  * Created by Saurabh on 1/2/2016.
  */
+@UIScope
 public class ListAdapter extends RecyclerView.Adapter<PosterViewHolder> {
 
 
@@ -36,6 +40,7 @@ public class ListAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     private Context context;
     private LayoutInflater inflater;
 
+    @Inject
     ListAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);

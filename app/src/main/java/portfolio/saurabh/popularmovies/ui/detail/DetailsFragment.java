@@ -53,6 +53,9 @@ import portfolio.saurabh.popularmovies.data.MovieService;
 import portfolio.saurabh.popularmovies.data.TrailerList;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
+import portfolio.saurabh.popularmovies.di.component.DaggerUiComponent;
+import portfolio.saurabh.popularmovies.di.component.UiComponent;
+import portfolio.saurabh.popularmovies.di.module.UiModule;
 import portfolio.saurabh.popularmovies.ui.detail.trailer.TrailerPagerAdapter;
 import portfolio.saurabh.popularmovies.ui.review.ReviewActivity;
 import portfolio.saurabh.popularmovies.util.DateConvert;
@@ -91,6 +94,13 @@ public class DetailsFragment extends Fragment {
         return ((MovieApplication) getActivity().getApplicationContext()).getComponent();
     }
 
+    UiComponent getComponent() {
+        return DaggerUiComponent.builder()
+                .applicationComponent(getAppComponent())
+                .uiModule(new UiModule(getContext()))
+                .build();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +115,7 @@ public class DetailsFragment extends Fragment {
         setHasOptionsMenu(true);
         movie = getArguments().getParcelable(KEY_MOVIE);
 //        if (savedInstanceState == null) {
-        final ImageView poster = (ImageView) layout.findViewById(R.id.poster);
+        final ImageView poster = layout.findViewById(R.id.poster);
         final FragmentActivity mActivity = getActivity();
         Glide.with(getActivity()).load(POSTER_BASE_URL + movie.posterurl).error(Glide.with(getActivity()).load(R.drawable.placeholder)).into(new SimpleTarget<Drawable>() {
             @Override
@@ -125,14 +135,14 @@ public class DetailsFragment extends Fragment {
                 poster.setImageDrawable(resource);
             }
         });
-        pager = (ViewPager) layout.findViewById(R.id.pager);
-        indicator = (CircleIndicator) layout.findViewById(R.id.indicator);
+        pager = layout.findViewById(R.id.pager);
+        indicator = layout.findViewById(R.id.indicator);
 //          Log.d("abc3", getActivity().toString());
-        final TextView date = (TextView) layout.findViewById(R.id.date);
+        final TextView date = layout.findViewById(R.id.date);
         date.setText("In theatres " + DateConvert.convert(movie.release_date));
-        final IconTextView rating = (IconTextView) layout.findViewById(R.id.rating);
+        final IconTextView rating = layout.findViewById(R.id.rating);
         rating.setText("{fa-star} " + movie.user_rating + "/10");
-        final TextView plot = (TextView) layout.findViewById(R.id.plot);
+        final TextView plot = layout.findViewById(R.id.plot);
         plot.setText(movie.plot.equals("null") ? "" : movie.plot);
 
         fab = layout.findViewById(R.id.fab);
@@ -193,7 +203,7 @@ public class DetailsFragment extends Fragment {
 
         layout.findViewById(R.id.reviews).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), ReviewActivity.class);
                 intent.putExtra(ReviewActivity.KEY_ID, movie.id);
                 startActivity(intent);
@@ -204,7 +214,7 @@ public class DetailsFragment extends Fragment {
             fab.setImageResource(R.drawable.ic_favorite_red_48dp);
         }
 
-        getAppComponent().inject(this);
+        getComponent().inject(this);
         movieDao = myDatabaseHelper.movieModel();
 
         return layout;

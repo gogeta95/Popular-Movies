@@ -10,19 +10,28 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.ReviewData;
+import portfolio.saurabh.popularmovies.di.UIScope;
 
-
+@UIScope
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHolder> {
     private Context context;
     private LayoutInflater inflater;
     private List<ReviewData> reviewDataList;
 
-    ReviewAdapter(Context context, List<ReviewData> reviewDataList) {
+    @Inject
+    ReviewAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+    }
+
+
+    public void setReviewDataList(List<ReviewData> reviewDataList) {
         this.reviewDataList = reviewDataList;
+        notifyDataSetChanged();
     }
 
     @Override

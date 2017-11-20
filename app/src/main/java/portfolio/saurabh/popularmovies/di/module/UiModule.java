@@ -1,7 +1,6 @@
 package portfolio.saurabh.popularmovies.di.module;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 
 import dagger.Module;
 import dagger.Provides;
@@ -26,12 +25,6 @@ public class UiModule {
     @UIScope
     Context provideContext() {
         return context;
-    }
-
-    @Provides
-    @UIScope
-    LayoutInflater provideLayoutInflater() {
-        return LayoutInflater.from(context);
     }
 
     @Provides

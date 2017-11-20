@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "db69e920541726f206892147ab03d7c5",
+    "identityHash": "fddd08bf478c6d39fa351b06de103080",
     "entities": [
       {
         "tableName": "Movie",
@@ -106,7 +106,7 @@
       },
       {
         "tableName": "ReviewData",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user` TEXT, `review` TEXT, `url` TEXT NOT NULL, PRIMARY KEY(`url`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user` TEXT, `review` TEXT, `url` TEXT NOT NULL, `movieId` INTEGER NOT NULL, PRIMARY KEY(`url`))",
         "fields": [
           {
             "fieldPath": "user",
@@ -125,6 +125,12 @@
             "columnName": "url",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "movieId",
+            "columnName": "movieId",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -139,7 +145,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"db69e920541726f206892147ab03d7c5\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"fddd08bf478c6d39fa351b06de103080\")"
     ]
   }
 }

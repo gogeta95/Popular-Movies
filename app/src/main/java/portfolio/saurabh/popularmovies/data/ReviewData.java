@@ -29,18 +29,20 @@ public class ReviewData implements Parcelable {
     @SerializedName("content")
     public String review;
     @SerializedName("url")
-    public @PrimaryKey @NonNull String url;
+    public @PrimaryKey
+    @NonNull
+    String url;
+
+    public int movieId;
+
+    public ReviewData() {
+    }
 
     protected ReviewData(Parcel in) {
         user = in.readString();
         review = in.readString();
         url = in.readString();
-    }
-
-    public ReviewData(String user, String review, String url) {
-        this.user = user;
-        this.review = review;
-        this.url = url;
+        movieId = in.readInt();
     }
 
     @Override
@@ -53,5 +55,6 @@ public class ReviewData implements Parcelable {
         dest.writeString(user);
         dest.writeString(review);
         dest.writeString(url);
+        dest.writeInt(movieId);
     }
 }
