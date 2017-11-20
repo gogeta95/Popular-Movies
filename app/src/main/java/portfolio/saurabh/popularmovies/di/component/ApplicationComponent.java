@@ -3,10 +3,10 @@ package portfolio.saurabh.popularmovies.di.component;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import portfolio.saurabh.popularmovies.DetailsFragment;
-import portfolio.saurabh.popularmovies.FavoritesFragment;
 import portfolio.saurabh.popularmovies.di.module.ApplicationModule;
-import portfolio.saurabh.popularmovies.listfragment.ListFragment;
+import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
+import portfolio.saurabh.popularmovies.ui.main.favorite.FavoritesFragment;
+import portfolio.saurabh.popularmovies.ui.main.listfragment.ListFragment;
 
 /**
  * Created by saurabh on 20/11/17.

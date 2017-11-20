@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="portfolio.saurabh.popularmovies.MovieDetail">
+    tools:context="portfolio.saurabh.popularmovies.ui.detail.MovieDetail">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/actionbar"

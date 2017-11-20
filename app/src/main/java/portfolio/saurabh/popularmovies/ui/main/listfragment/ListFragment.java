@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies.listfragment;
+package portfolio.saurabh.popularmovies.ui.main.listfragment;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
@@ -23,10 +23,10 @@ import javax.inject.Inject;
 
 import portfolio.saurabh.popularmovies.MovieApplication;
 import portfolio.saurabh.popularmovies.R;
-import portfolio.saurabh.popularmovies.RecyclerAdapter;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
+import portfolio.saurabh.popularmovies.ui.main.RecyclerAdapter;
 
 
 public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ListFragmentContract.View {

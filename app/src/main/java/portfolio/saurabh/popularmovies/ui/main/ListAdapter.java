@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.ui.main;
 
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -17,30 +17,25 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
+import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
+import portfolio.saurabh.popularmovies.ui.detail.MovieDetail;
+
+/**
+ * Created by Saurabh on 1/2/2016.
+ */
+public class ListAdapter extends RecyclerView.Adapter<PosterViewHolder> {
 
 
-public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
-    public static final String TAG = RecyclerAdapter.class.getName();
-    public static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/w185";
-    public static final String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w500";
-    LayoutInflater inflater;
-    Context context;
-    List<Movie> movies;
+    private List<Movie> movies;
+    private Context context;
+    private LayoutInflater inflater;
 
-    public RecyclerAdapter(Context context) {
+    public ListAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        if (MainActivity.mIsDualPane) {
-            ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail, DetailsFragment.getInstance(movies.get(0)))
-                    .commit();
-        }
-    }
-
-    public void setMovies(List<Movie> movies) {
-        this.movies = movies;
-        notifyDataSetChanged();
+        this.context = context;
     }
 
     @Override
@@ -52,8 +47,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     public void onBindViewHolder(final PosterViewHolder holder, int position) {
         final Movie movie = movies.get(position);
         String poster_url = movie.posterurl;
-        if (poster_url != null && !(poster_url.isEmpty() || poster_url.equals("null"))) {
-            Glide.with(context).load(POSTER_BASE_URL + poster_url).error(Glide.with(context).load(R.drawable.placeholder)).into(holder.poster);
+        if (!(poster_url.isEmpty() || poster_url.equals("null"))) {
+            Glide.with(context).load(RecyclerAdapter.POSTER_BASE_URL + poster_url).error(Glide.with(context).load(R.drawable.placeholder)).into(holder.poster);
         }
         if (!MainActivity.mIsDualPane) {
             holder.root.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +57,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
                     Intent intent = new Intent(context, MovieDetail.class);
                     intent.putExtra(MovieDetail.KEY_MOVIE, movie);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        AppBarLayout barLayout = (AppBarLayout) ((AppCompatActivity) context).findViewById(R.id.actionbar);
+                        AppBarLayout barLayout = ((AppCompatActivity) context).findViewById(R.id.actionbar);
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((AppCompatActivity) context, Pair.create((View) holder.poster, "poster"), Pair.create((View) barLayout, "actionbar"));
                         context.startActivity(intent, options.toBundle());
                     } else
@@ -80,7 +75,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
                 }
             });
         }
-
     }
 
     @Override
@@ -88,4 +82,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
         return movies == null ? 0 : movies.size();
     }
 
+    public void setData(List<Movie> data) {
+        this.movies = data;
+        notifyDataSetChanged();
+    }
 }

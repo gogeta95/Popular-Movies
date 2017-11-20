@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.ui.detail.trailer;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+
+import portfolio.saurabh.popularmovies.R;
 
 
 /**

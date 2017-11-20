@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="portfolio.saurabh.popularmovies.MainActivity">
+    tools:context="portfolio.saurabh.popularmovies.ui.main.MainActivity">
     <item
         android:icon="@drawable/ic_sort_white_48dp"
         android:orderInCategory="100"

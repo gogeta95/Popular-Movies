@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.ui.detail;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.view.Window;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
+import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
 
 public class MovieDetail extends AppCompatActivity {

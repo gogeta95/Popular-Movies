@@ -7,7 +7,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="portfolio.saurabh.popularmovies.ReviewActivity"
+    tools:context="portfolio.saurabh.popularmovies.ui.review.ReviewActivity"
     tools:showIn="@layout/activity_review">
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"

@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.ui.main;
 
 
 import android.os.Build;
@@ -12,7 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
-import portfolio.saurabh.popularmovies.listfragment.ListFragment;
+import portfolio.saurabh.popularmovies.R;
+import portfolio.saurabh.popularmovies.ui.main.favorite.FavoritesFragment;
+import portfolio.saurabh.popularmovies.ui.main.listfragment.ListFragment;
+import portfolio.saurabh.popularmovies.util.UriBuilder;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();

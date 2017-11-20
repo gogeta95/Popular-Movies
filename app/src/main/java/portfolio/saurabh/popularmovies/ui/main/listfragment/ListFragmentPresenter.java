@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies.listfragment;
+package portfolio.saurabh.popularmovies.ui.main.listfragment;
 
 import android.support.annotation.NonNull;
 import android.util.Log;

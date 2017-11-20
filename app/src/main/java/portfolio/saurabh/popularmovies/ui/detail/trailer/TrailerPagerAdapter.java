@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.ui.detail.trailer;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

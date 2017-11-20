@@ -1,9 +1,11 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.ui.main;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import portfolio.saurabh.popularmovies.R;
 
 public class PosterViewHolder extends RecyclerView.ViewHolder {
     public ImageView poster;

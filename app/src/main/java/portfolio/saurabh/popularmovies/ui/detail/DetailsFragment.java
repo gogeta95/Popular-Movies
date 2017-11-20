@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.ui.detail;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -45,12 +45,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import me.relex.circleindicator.CircleIndicator;
+import portfolio.saurabh.popularmovies.MovieApplication;
+import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.data.MovieDao;
 import portfolio.saurabh.popularmovies.data.MovieService;
 import portfolio.saurabh.popularmovies.data.TrailerList;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
+import portfolio.saurabh.popularmovies.ui.detail.trailer.TrailerPagerAdapter;
+import portfolio.saurabh.popularmovies.ui.main.RecyclerAdapter;
+import portfolio.saurabh.popularmovies.ui.review.ReviewActivity;
+import portfolio.saurabh.popularmovies.util.DateConvert;
 import portfolio.saurabh.popularmovies.util.MaterialColorMapUtils;
 import retrofit2.Call;
 import retrofit2.Callback;

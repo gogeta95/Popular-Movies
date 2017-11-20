@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.ui.main.favorite;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
@@ -17,9 +17,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import portfolio.saurabh.popularmovies.MovieApplication;
+import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
+import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
+import portfolio.saurabh.popularmovies.ui.main.ListAdapter;
+import portfolio.saurabh.popularmovies.ui.main.MainActivity;
 
 
 public class FavoritesFragment extends Fragment {

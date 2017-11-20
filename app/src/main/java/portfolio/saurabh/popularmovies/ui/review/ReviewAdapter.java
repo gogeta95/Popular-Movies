@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.ui.review;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.ReviewData;
 
 

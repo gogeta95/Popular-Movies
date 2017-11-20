@@ -1,4 +1,4 @@
-package portfolio.saurabh.popularmovies;
+package portfolio.saurabh.popularmovies.util;
 
 import java.util.Calendar;
 import java.util.Date;
