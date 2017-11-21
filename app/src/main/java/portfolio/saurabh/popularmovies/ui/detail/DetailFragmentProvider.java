@@ -10,6 +10,6 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class DetailFragmentProvider {
 
-    @ContributesAndroidInjector(modules = DetailFragmentModule.class)
+    @ContributesAndroidInjector()
     abstract DetailsFragment bindDetailsFragment();
 }
