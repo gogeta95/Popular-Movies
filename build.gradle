@@ -39,6 +39,6 @@ ext {
     archLifecycleVersion = "1.0.0"
     archRoomVersion = "1.0.0"
     glideVersion = '4.3.1'
-    dagger2Version = '2.11'
+    dagger2Version = '2.13'
     butterKnifeVersion = '8.8.1'
 }

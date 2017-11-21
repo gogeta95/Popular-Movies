@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
@@ -37,8 +39,9 @@ public class ListAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     private Context context;
     private LayoutInflater inflater;
 
-    ListAdapter(Context context) {
-        this.context = context;
+    @Inject
+    ListAdapter(FavoritesFragment favoritesFragment) {
+        this.context = favoritesFragment.getContext();
         inflater = LayoutInflater.from(context);
     }
 

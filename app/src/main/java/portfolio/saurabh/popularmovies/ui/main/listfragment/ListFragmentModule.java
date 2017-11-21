@@ -15,8 +15,5 @@ public class ListFragmentModule {
         return listFragmentPresenter;
     }
 
-    @Provides
-    RecyclerAdapter provideAdapter(ListFragment listFragment) {
-        return new RecyclerAdapter(listFragment.getContext());
-    }
+
 }
