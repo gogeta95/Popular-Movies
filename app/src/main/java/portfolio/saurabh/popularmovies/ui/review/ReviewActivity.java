@@ -29,7 +29,6 @@ import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
 import portfolio.saurabh.popularmovies.di.component.DaggerUiComponent;
 import portfolio.saurabh.popularmovies.di.component.UiComponent;
-import portfolio.saurabh.popularmovies.di.module.UiModule;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,8 +53,8 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
 
     UiComponent getComponent() {
         return DaggerUiComponent.builder()
-                .applicationComponent(getAppComponent())
-                .uiModule(new UiModule(this))
+                .appComponent(getAppComponent())
+                .context(this)
                 .build();
     }
 

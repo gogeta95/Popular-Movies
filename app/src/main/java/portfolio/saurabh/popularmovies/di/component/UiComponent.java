@@ -1,6 +1,10 @@
 package portfolio.saurabh.popularmovies.di.component;
 
+import android.content.Context;
+
+import dagger.BindsInstance;
 import dagger.Component;
+import portfolio.saurabh.popularmovies.di.ActivityContext;
 import portfolio.saurabh.popularmovies.di.UIScope;
 import portfolio.saurabh.popularmovies.di.module.UiModule;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
@@ -23,4 +27,15 @@ public interface UiComponent {
     void inject(DetailsFragment fragment);
 
     void inject(ReviewActivity activity);
+
+    @Component.Builder
+    interface Builder {
+
+        @BindsInstance
+        Builder context(@ActivityContext Context context);
+
+        Builder appComponent(ApplicationComponent applicationComponent);
+
+        UiComponent build();
+    }
 }

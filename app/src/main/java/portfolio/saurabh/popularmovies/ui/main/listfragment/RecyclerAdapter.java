@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
+import portfolio.saurabh.popularmovies.di.ActivityContext;
 import portfolio.saurabh.popularmovies.di.UIScope;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
 import portfolio.saurabh.popularmovies.ui.detail.MovieDetail;
@@ -37,7 +38,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     private List<Movie> movies;
 
     @Inject
-    RecyclerAdapter(Context context) {
+    RecyclerAdapter(@ActivityContext Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
     }

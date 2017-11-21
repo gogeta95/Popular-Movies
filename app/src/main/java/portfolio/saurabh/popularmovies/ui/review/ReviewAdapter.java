@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.ReviewData;
+import portfolio.saurabh.popularmovies.di.ActivityContext;
 import portfolio.saurabh.popularmovies.di.UIScope;
 
 @UIScope
@@ -23,7 +24,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
     private List<ReviewData> reviewDataList;
 
     @Inject
-    ReviewAdapter(Context context) {
+    ReviewAdapter(@ActivityContext Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
     }

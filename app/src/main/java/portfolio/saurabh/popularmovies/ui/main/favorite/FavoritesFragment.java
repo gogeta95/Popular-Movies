@@ -25,7 +25,6 @@ import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
 import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
 import portfolio.saurabh.popularmovies.di.component.DaggerUiComponent;
 import portfolio.saurabh.popularmovies.di.component.UiComponent;
-import portfolio.saurabh.popularmovies.di.module.UiModule;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
 import portfolio.saurabh.popularmovies.ui.main.MainActivity;
 
@@ -46,8 +45,8 @@ public class FavoritesFragment extends Fragment {
 
     UiComponent getComponent() {
         return DaggerUiComponent.builder()
-                .applicationComponent(getAppComponent())
-                .uiModule(new UiModule(getContext()))
+                .appComponent(getAppComponent())
+                .context(getContext())
                 .build();
     }
 

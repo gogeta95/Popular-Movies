@@ -4,6 +4,7 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
+import portfolio.saurabh.popularmovies.di.ActivityContext;
 import portfolio.saurabh.popularmovies.di.UIScope;
 import portfolio.saurabh.popularmovies.ui.main.listfragment.ListFragmentContract;
 import portfolio.saurabh.popularmovies.ui.main.listfragment.ListFragmentPresenter;
@@ -15,15 +16,10 @@ import portfolio.saurabh.popularmovies.ui.main.listfragment.ListFragmentPresente
 
 @Module
 public class UiModule {
-    private Context context;
-
-    public UiModule(Context context) {
-        this.context = context;
-    }
 
     @Provides
     @UIScope
-    Context provideContext() {
+    Context provideContext(@ActivityContext Context context) {
         return context;
     }
 

@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -42,23 +43,19 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import me.relex.circleindicator.CircleIndicator;
-import portfolio.saurabh.popularmovies.MovieApplication;
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.data.MovieService;
 import portfolio.saurabh.popularmovies.data.Trailer;
 import portfolio.saurabh.popularmovies.data.TrailerList;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
-import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
-import portfolio.saurabh.popularmovies.di.component.DaggerUiComponent;
-import portfolio.saurabh.popularmovies.di.component.UiComponent;
-import portfolio.saurabh.popularmovies.di.module.UiModule;
 import portfolio.saurabh.popularmovies.ui.detail.trailer.TrailerPagerAdapter;
 import portfolio.saurabh.popularmovies.ui.review.ReviewActivity;
 import portfolio.saurabh.popularmovies.util.DateConvert;
@@ -93,17 +90,6 @@ public class DetailsFragment extends Fragment {
         return detailsFragment;
     }
 
-    ApplicationComponent getAppComponent() {
-        return ((MovieApplication) getActivity().getApplicationContext()).getComponent();
-    }
-
-    UiComponent getComponent() {
-        return DaggerUiComponent.builder()
-                .applicationComponent(getAppComponent())
-                .uiModule(new UiModule(getContext()))
-                .build();
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +97,7 @@ public class DetailsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View layout = inflater.inflate(R.layout.movie_detail_fragment, container, false);
 //        super.onCreate(savedInstanceState);
         Iconify.with(new FontAwesomeModule());
@@ -219,7 +205,7 @@ public class DetailsFragment extends Fragment {
             fab.setImageResource(R.drawable.ic_favorite_red_48dp);
         }
 
-        getComponent().inject(this);
+        AndroidSupportInjection.inject(this);
 
 
         pagerAdapter = new TrailerPagerAdapter(getChildFragmentManager());

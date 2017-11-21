@@ -47,8 +47,10 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
     compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
 
-    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
     compile "com.google.dagger:dagger:$rootProject.dagger2Version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.dagger2Version"
+    compile "com.google.dagger:dagger-android-support:$rootProject.dagger2Version"
     provided "javax.annotation:jsr250-api:1.0"
 
     annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"

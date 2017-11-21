@@ -38,12 +38,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class ApplicationModule {
 
-    private Application application;
-
-    public ApplicationModule(Application application) {
-        this.application = application;
-    }
-
     @Provides
     @Singleton
     HttpLoggingInterceptor provideLoggingInterceptor() {
@@ -91,14 +85,14 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    MyDatabaseHelper provideDbHelper() {
+    MyDatabaseHelper provideDbHelper(Application application) {
         return Room.databaseBuilder(application, MyDatabaseHelper.class, "Movie.db")
                 .build();
     }
 
     @Provides
     @Singleton
-    String provideApikey() {
+    String provideApikey(Application application) {
         return application.getString(R.string.api_key);
     }
 }
