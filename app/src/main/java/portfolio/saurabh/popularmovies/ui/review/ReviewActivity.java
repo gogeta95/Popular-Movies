@@ -18,17 +18,14 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjection;
 import io.reactivex.Completable;
 import io.reactivex.schedulers.Schedulers;
-import portfolio.saurabh.popularmovies.MovieApplication;
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.MovieService;
 import portfolio.saurabh.popularmovies.data.ReviewData;
 import portfolio.saurabh.popularmovies.data.ReviewList;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
-import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
-import portfolio.saurabh.popularmovies.di.component.DaggerUiComponent;
-import portfolio.saurabh.popularmovies.di.component.UiComponent;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,24 +44,13 @@ public class ReviewActivity extends AppCompatActivity implements SwipeRefreshLay
     private SwipeRefreshLayout refreshLayout;
     private LiveData<List<ReviewData>> reviewLiveData;
 
-    ApplicationComponent getAppComponent() {
-        return ((MovieApplication) getApplicationContext()).getComponent();
-    }
-
-    UiComponent getComponent() {
-        return DaggerUiComponent.builder()
-                .appComponent(getAppComponent())
-                .context(this)
-                .build();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getComponent().inject(this);
+        AndroidInjection.inject(this);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
