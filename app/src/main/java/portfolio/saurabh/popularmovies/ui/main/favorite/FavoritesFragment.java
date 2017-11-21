@@ -18,13 +18,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import portfolio.saurabh.popularmovies.MovieApplication;
+import dagger.android.support.AndroidSupportInjection;
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
 import portfolio.saurabh.popularmovies.database.MyDatabaseHelper;
-import portfolio.saurabh.popularmovies.di.component.ApplicationComponent;
-import portfolio.saurabh.popularmovies.di.component.DaggerUiComponent;
-import portfolio.saurabh.popularmovies.di.component.UiComponent;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
 import portfolio.saurabh.popularmovies.ui.main.MainActivity;
 
@@ -39,22 +36,11 @@ public class FavoritesFragment extends Fragment {
 
     private LiveData<List<Movie>> movieLiveData;
 
-    ApplicationComponent getAppComponent() {
-        return ((MovieApplication) getActivity().getApplicationContext()).getComponent();
-    }
-
-    UiComponent getComponent() {
-        return DaggerUiComponent.builder()
-                .appComponent(getAppComponent())
-                .context(getContext())
-                .build();
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.favorites_list, container, false);
-        getComponent().inject(this);
+        AndroidSupportInjection.inject(this);
         recyclerView = layout.findViewById(R.id.recycler_view);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int width = (int) (metrics.widthPixels / metrics.density);

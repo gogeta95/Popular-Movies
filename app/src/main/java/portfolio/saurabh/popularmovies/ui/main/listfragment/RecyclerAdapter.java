@@ -17,12 +17,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.data.Movie;
-import portfolio.saurabh.popularmovies.di.ActivityContext;
-import portfolio.saurabh.popularmovies.di.UIScope;
 import portfolio.saurabh.popularmovies.ui.detail.DetailsFragment;
 import portfolio.saurabh.popularmovies.ui.detail.MovieDetail;
 import portfolio.saurabh.popularmovies.ui.main.MainActivity;
@@ -30,15 +26,14 @@ import portfolio.saurabh.popularmovies.ui.main.PosterViewHolder;
 
 import static portfolio.saurabh.popularmovies.util.UriBuilder.POSTER_BASE_URL;
 
-@UIScope
+
 public class RecyclerAdapter extends RecyclerView.Adapter<PosterViewHolder> {
     public static final String TAG = RecyclerAdapter.class.getName();
     private LayoutInflater inflater;
     private Context context;
     private List<Movie> movies;
 
-    @Inject
-    RecyclerAdapter(@ActivityContext Context context) {
+    RecyclerAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
     }

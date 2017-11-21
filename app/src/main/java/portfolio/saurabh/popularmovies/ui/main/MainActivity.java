@@ -3,6 +3,7 @@ package portfolio.saurabh.popularmovies.ui.main;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.ChangeClipBounds;
@@ -12,15 +13,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import portfolio.saurabh.popularmovies.R;
 import portfolio.saurabh.popularmovies.ui.main.favorite.FavoritesFragment;
 import portfolio.saurabh.popularmovies.ui.main.listfragment.ListFragment;
 import portfolio.saurabh.popularmovies.util.UriBuilder;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String KEY_MENU_ITEM = "MENU_ITEM";
     public static boolean mIsDualPane;
+    @Inject
+    DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private int menuitem;
 
     public void setupWindowAnimations() {
@@ -37,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         setupWindowAnimations();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AndroidInjection.inject(this);
         View detailView = findViewById(R.id.movie_detail);
         mIsDualPane = detailView != null && detailView.getVisibility() == View.VISIBLE;
         if (savedInstanceState != null && savedInstanceState.getInt(KEY_MENU_ITEM) != 0)
@@ -99,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_MENU_ITEM, menuitem);
+    }
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return dispatchingAndroidInjector;
     }
 }
 
